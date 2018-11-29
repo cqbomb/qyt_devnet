@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index.index),
     path('top/', top.top),
+    path('top_json/', top.top_json),
 ]
