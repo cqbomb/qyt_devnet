@@ -13,17 +13,17 @@ EDGE_LENGTH_MAIN = 150
 
 nodes = []
 
-nodes.append({'id': 1, 'label': 'IOS路由器', 'image': DIR + 'router.png', 'shape': 'image'})
-nodes.append({'id': 2, 'label': 'ASA防火墙', 'image': DIR + 'asa.png', 'shape': 'image'})
-nodes.append({'id': 3, 'label': 'Core_SW', 'image': DIR + 'switch.png', 'shape': 'image'})
-nodes.append({'id': 4, 'label': 'Access_SW1', 'image': DIR + 'switch.png', 'shape': 'image'})
-nodes.append({'id': 5, 'label': 'Access_SW2', 'image': DIR + 'switch.png', 'shape': 'image'})
-nodes.append({'id': 6, 'label': 'WIN7', 'image': DIR + 'Desktop.png', 'shape': 'image'})
-nodes.append({'id': 7, 'label': '互联网', 'image': DIR + 'Internet.png', 'shape': 'image'})
+nodes.append({'id': 1, 'label': 'IOS路由器', 'image': DIR + 'router_isr.png', 'shape': 'image'})
+nodes.append({'id': 2, 'label': 'ASA防火墙', 'image': DIR + 'firepower2120.png', 'shape': 'image'})
+nodes.append({'id': 3, 'label': 'Core_SW', 'image': DIR + 'nexus9200.png', 'shape': 'image'})
+nodes.append({'id': 4, 'label': 'Access_SW1', 'image': DIR + 'nexus9200.png', 'shape': 'image'})
+nodes.append({'id': 5, 'label': 'Access_SW2', 'image': DIR + 'nexus9200.png', 'shape': 'image'})
+nodes.append({'id': 6, 'label': 'WIN7', 'image': DIR + 'desktop_new.png', 'shape': 'image'})
+nodes.append({'id': 7, 'label': '互联网', 'image': DIR + 'internet_ico.png', 'shape': 'image'})
 
 edges = []
 
-edges.append({'from': 1, 'to': 2, 'length': EDGE_LENGTH_MAIN})
+edges.append({'from': 1, 'to': 2, 'length': EDGE_LENGTH_MAIN, 'label': "IOS:E0/0 --- ASA G1"})
 edges.append({'from': 1, 'to': 7, 'length': EDGE_LENGTH_MAIN})
 edges.append({'from': 2, 'to': 3, 'length': EDGE_LENGTH_MAIN})
 edges.append({'from': 3, 'to': 4, 'length': EDGE_LENGTH_MAIN})
