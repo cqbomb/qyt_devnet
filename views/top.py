@@ -8,6 +8,7 @@
 
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 DIR = '/static/images/top/'
 EDGE_LENGTH_MAIN = 150
 
@@ -31,9 +32,11 @@ edges.append({'from': 3, 'to': 5, 'length': EDGE_LENGTH_MAIN})
 edges.append({'from': 4, 'to': 6, 'length': EDGE_LENGTH_MAIN})
 
 
+@login_required()
 def top(request):
     return render(request, 'top_map.html')
 
 
+@login_required()
 def top_json(request):
     return JsonResponse({'nodes': nodes, 'edges': edges})

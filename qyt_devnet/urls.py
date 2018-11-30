@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from views import index, top
+from views import index, top, qyt_login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index.index),
     path('top/', top.top),
     path('top_json/', top.top_json),
+    # 登录页面
+    path('accounts/login/', qyt_login.qyt_login),
+    # 注销页面
+    path('accounts/logout/', qyt_login.qyt_logout),
 ]

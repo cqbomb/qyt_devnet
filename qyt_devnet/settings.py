@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'qytdb',
 ]
 
 MIDDLEWARE = [
@@ -76,10 +77,17 @@ WSGI_APPLICATION = 'qyt_devnet.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'qytangdb',  # 数据库名称
+        'USER': 'qytangdbuser',  # 拥有者，这个一般没修改
+        'PASSWORD':'Cisc0123',  # 密码，自己设定的
+        'HOST': '192.168.1.11',  # 默认的就没写
+        'PORT': '',
     }
 }
+
 
 
 # Password validation
