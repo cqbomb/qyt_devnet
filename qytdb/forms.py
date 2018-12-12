@@ -35,7 +35,7 @@ class DeviceForm(forms.Form):
                                      widget=forms.TextInput(attrs={"class": "form-control"}))
     description = forms.CharField(label="设备描述",
                                   required=True,
-                                  widget=forms.Textarea(attrs={"class": "form-control"}))
+                                  widget=forms.Textarea(attrs={"class": "form-control", "rows": 3}))
     type_choices = (("switch", "switch"), ("Router", "Router"), ("ASA", "ASA"))
     type = forms.CharField(label='设备类型',
                            required=True,
@@ -76,7 +76,7 @@ class DeviceForm(forms.Form):
                                    label='SSH密码',
                                    required=True,
                                    validators=[password_regex],
-                                   widget=forms.TextInput(attrs={"class": "form-control"}))
+                                   widget=forms.PasswordInput(attrs={"class": "form-control"}))
     enable_password_regex = RegexValidator(regex=r'[0-9a-zA-Z~!@#$%^&*()_+=,./]+',
                                            message="特权密码只能包含数字,小写,大写字母 ~!@#$%^&*()_+=,./")
     enable_password = forms.CharField(max_length=100,
@@ -84,7 +84,7 @@ class DeviceForm(forms.Form):
                                       label='特权密码',
                                       required=False,
                                       validators=[enable_password_regex],
-                                      widget=forms.TextInput(attrs={"class": "form-control"}))
+                                      widget=forms.PasswordInput(attrs={"class": "form-control"}))
 
     def clean_name(self):
         name = self.cleaned_data['name']  # 提取客户输入的设备名
@@ -116,12 +116,15 @@ class DeviceForm(forms.Form):
         if snmp_enable == 'True' and snmp_ro_community:
             return snmp_ro_community
         else:
-            raise forms.ValidationError("设置Community之前请激活SNMP")
+            raise forms.ValidationError("设置只读Community之前请激活SNMP")
 
     def clean_snmp_rw_community(self):
         snmp_enable = self.cleaned_data['snmp_enable']
-        snmp_rw_community = self.cleaned_data['snmp_ro_community']
-        if snmp_enable == 'True' and snmp_rw_community:
-            return snmp_rw_community
+        snmp_rw_community = self.cleaned_data['snmp_rw_community']
+        if snmp_rw_community:
+            if snmp_enable == 'True' and snmp_rw_community:
+                return snmp_rw_community
+            else:
+                raise forms.ValidationError("设置读写Community之前请激活SNMP")
         else:
-            raise forms.ValidationError("设置Community之前请激活SNMP")
+            return snmp_rw_community

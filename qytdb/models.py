@@ -9,7 +9,7 @@ class Devicedb(models.Model):
     type = models.CharField(max_length=100, blank=False)
     snmp_enable = models.BooleanField(default=False)
     snmp_ro_community = models.CharField(max_length=999, blank=False)
-    snmp_rw_community = models.CharField(max_length=999, blank=False)
+    snmp_rw_community = models.CharField(max_length=999, blank=True)
     ssh_username = models.CharField(max_length=999, blank=False)
     ssh_password = models.CharField(max_length=999, blank=False)
     enable_password = models.CharField(max_length=999, blank=True)
@@ -18,10 +18,11 @@ class Devicedb(models.Model):
 
 class Deviceinterfaces(models.Model):
     name = models.CharField(max_length=999, unique=True, blank=False)
-    interfaces = JSONField()
-    interfaces_bw = JSONField()
-    interfaces_max_utilization = JSONField()
-    interfaces_current_utilization = JSONField()
+    interfaces_num = models.IntegerField(default=0, blank=True)
+    interfaces = JSONField(blank=True)
+    interfaces_bw = JSONField(blank=True)
+    interfaces_max_utilization = JSONField(blank=True)
+    interfaces_current_utilization = JSONField(blank=True)
 
 
 class Devicecpumem(models.Model):
@@ -34,12 +35,18 @@ class Devicecpumem(models.Model):
 
 class Devicestatus(models.Model):
     name = models.CharField(max_length=999, unique=True, blank=False)
-    interfaces = JSONField()
-    interfaces_rx = JSONField()
-    interfaces_tx = JSONField()
+    interfaces = JSONField(blank=True)
+    interfaces_rx = JSONField(blank=True)
+    interfaces_tx = JSONField(blank=True)
     cpu = models.IntegerField(default=0, blank=True)
     mem = models.IntegerField(default=0, blank=True)
     date = models.DateField(auto_now_add=True)
+
+
+class Device_reachable(models.Model):
+    name = models.CharField(max_length=999, unique=True, blank=False)
+    snmp_reachable = models.BooleanField(default=False)
+    ssh_reachable = models.BooleanField(default=False)
 
 
 class Deviceconfig(models.Model):
