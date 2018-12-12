@@ -39,10 +39,10 @@
           <th scope="row">{{ forloop.counter }}</th>
           {% if device.snmp_reachable is True and device.ssh_reachable is True %}
             <td align="center" style="color:green"><strong>{{ device.name }}</strong></td>
-          {% elif device.snmp_reachable is False or device.ssh_reachable is False %}
-            <td align="center" style="color:darkorange"><strong>{{ device.name }}</strong></td>
-          {% else %}
+          {% elif device.snmp_reachable is False and device.ssh_reachable is False %}
             <td align="center" style="color:red"><strong>{{ device.name }}</strong></td>
+          {% else %}
+            <td align="center" style="color:darkorange"><strong>{{ device.name }}</strong></td>
           {% endif %}
           <td align="center">{{ device.ip }}</td>
           {% if device.snmp_reachable %}

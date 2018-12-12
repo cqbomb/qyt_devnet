@@ -129,3 +129,96 @@ class DeviceForm(forms.Form):
                 raise forms.ValidationError("设置读写Community之前请激活SNMP")
         else:
             return snmp_rw_community
+
+
+class EditDeviceForm(forms.Form):
+    required_css_class = 'required'
+    name = forms.CharField(max_length=100,
+                           min_length=2,
+                           label='设备名称(只读)',
+                           required=True,
+                           widget=forms.TextInput(attrs={"class": "form-control", 'readonly': True}))
+    ip = forms.GenericIPAddressField(required=True,
+                                     label='IP地址',
+                                     widget=forms.TextInput(attrs={"class": "form-control"}))
+    description = forms.CharField(label="设备描述",
+                                  required=False,
+                                  widget=forms.Textarea(attrs={"class": "form-control", "rows": 3}))
+    type_choices = (("switch", "switch"), ("Router", "Router"), ("ASA", "ASA"))
+    type = forms.CharField(label='设备类型',
+                           required=True,
+                           widget=forms.Select(choices=type_choices,
+                                               attrs={"class": "form-control"}))
+    TRUE_FALSE_CHOICES = ((True, 'Yes'), (False, 'No'))
+    snmp_enable = forms.ChoiceField(label='是否激活SNMP',
+                                    required=True,
+                                    choices=TRUE_FALSE_CHOICES,
+                                    initial=False,
+                                    widget=forms.Select(attrs={"class": "required checkbox form-control"}))
+    community_regex = RegexValidator(regex=r'[0-9a-zA-Z~!@#$%^&*()_+=,./]+',
+                                     message="SNMP community 只能包含数字,小写,大写字母 ~!@#$%^&*()_+=,./")
+    snmp_ro_community = forms.CharField(max_length=100,
+                                        min_length=2,
+                                        label='SNMP只读',
+                                        required=True,
+                                        validators=[community_regex],
+                                        widget=forms.TextInput(attrs={"class": "form-control"}))
+    snmp_rw_community = forms.CharField(max_length=100,
+                                        min_length=2,
+                                        label='SNMP读写',
+                                        required=False,
+                                        validators=[community_regex],
+                                        widget=forms.TextInput(attrs={"class": "form-control"}))
+    username_regex = RegexValidator(regex=r'[0-9a-zA-Z~!@#$%^&*()_+=,./]+',
+                                    message="用户名只能包含数字,小写,大写字母 ~!@#$%^&*()_+=,./")
+    ssh_username = forms.CharField(max_length=100,
+                                   min_length=2,
+                                   label='SSH用户名',
+                                   required=True,
+                                   validators=[username_regex],
+                                   widget=forms.TextInput(attrs={"class": "form-control"}))
+    password_regex = RegexValidator(regex=r'[0-9a-zA-Z~!@#$%^&*()_+=,./]+',
+                                    message="密码只能包含数字,小写,大写字母 ~!@#$%^&*()_+=,./")
+    ssh_password = forms.CharField(max_length=100,
+                                   min_length=2,
+                                   label='SSH密码',
+                                   required=True,
+                                   validators=[password_regex],
+                                   widget=forms.TextInput(attrs={"class": "form-control"}))
+    enable_password_regex = RegexValidator(regex=r'[0-9a-zA-Z~!@#$%^&*()_+=,./]+',
+                                           message="特权密码只能包含数字,小写,大写字母 ~!@#$%^&*()_+=,./")
+    enable_password = forms.CharField(max_length=100,
+                                      min_length=2,
+                                      label='特权密码',
+                                      required=False,
+                                      validators=[enable_password_regex],
+                                      widget=forms.TextInput(attrs={"class": "form-control"}))
+
+    def clean_ip(self):
+        ip = self.cleaned_data['ip']  # 提取客户输入的设备IP
+        # 在数据库中查找是否存在其他设备使用这个IP地址
+
+        for i in Devicedb.objects.filter(ip=ip):
+            if i.name != self.cleaned_data['name']:
+                raise forms.ValidationError("设备IP地址已经存在")
+        else:
+            return ip
+
+    def clean_snmp_ro_community(self):
+        snmp_enable = self.cleaned_data['snmp_enable']
+        snmp_ro_community = self.cleaned_data['snmp_ro_community']
+        if snmp_enable == 'True' and snmp_ro_community:
+            return snmp_ro_community
+        else:
+            raise forms.ValidationError("设置只读Community之前请激活SNMP")
+
+    def clean_snmp_rw_community(self):
+        snmp_enable = self.cleaned_data['snmp_enable']
+        snmp_rw_community = self.cleaned_data['snmp_rw_community']
+        if snmp_rw_community:
+            if snmp_enable == 'True' and snmp_rw_community:
+                return snmp_rw_community
+            else:
+                raise forms.ValidationError("设置读写Community之前请激活SNMP")
+        else:
+            return snmp_rw_community
