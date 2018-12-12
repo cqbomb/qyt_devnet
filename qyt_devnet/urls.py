@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from views import index, top, qyt_login
+from views import index, top, qyt_login, qyt_add_devices
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +26,5 @@ urlpatterns = [
     path('accounts/login/', qyt_login.qyt_login),
     # 注销页面
     path('accounts/logout/', qyt_login.qyt_logout),
+    path('adddevices/', qyt_add_devices.add_devices),
 ]

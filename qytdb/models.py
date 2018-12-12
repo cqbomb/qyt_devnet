@@ -3,9 +3,9 @@ from django.contrib.postgres.fields import JSONField
 
 
 class Devicedb(models.Model):
-    name = models.CharField(max_length=999, blank=False)
-    ip = models.GenericIPAddressField(default='1.1.1.1')
-    description = models.CharField(max_length=99999, blank=True)
+    name = models.CharField(max_length=999, unique=True, blank=False)
+    ip = models.GenericIPAddressField(default='1.1.1.1', unique=True, )
+    description = models.TextField(blank=True)
     type = models.CharField(max_length=100, blank=False)
     snmp_enable = models.BooleanField(default=False)
     snmp_ro_community = models.CharField(max_length=999, blank=False)
@@ -17,7 +17,7 @@ class Devicedb(models.Model):
 
 
 class Deviceinterfaces(models.Model):
-    name = models.CharField(max_length=999, blank=False)
+    name = models.CharField(max_length=999, unique=True, blank=False)
     interfaces = JSONField()
     interfaces_bw = JSONField()
     interfaces_max_utilization = JSONField()
@@ -25,7 +25,7 @@ class Deviceinterfaces(models.Model):
 
 
 class Devicecpumem(models.Model):
-    name = models.CharField(max_length=999, blank=False)
+    name = models.CharField(max_length=999, unique=True, blank=False)
     cpu_max_utilization = models.IntegerField(default=0, blank=True)
     cpu_current_utilization = models.IntegerField(default=0, blank=True)
     mem_max_utilization = models.IntegerField(default=0, blank=True)
@@ -33,7 +33,7 @@ class Devicecpumem(models.Model):
 
 
 class Devicestatus(models.Model):
-    name = models.CharField(max_length=999, blank=False)
+    name = models.CharField(max_length=999, unique=True, blank=False)
     interfaces = JSONField()
     interfaces_rx = JSONField()
     interfaces_tx = JSONField()
@@ -43,7 +43,7 @@ class Devicestatus(models.Model):
 
 
 class Deviceconfig(models.Model):
-    name = models.CharField(max_length=999, blank=False)
+    name = models.CharField(max_length=999, unique=True, blank=False)
     hash = models.CharField(max_length=9999, blank=False)
     config = models.CharField(max_length=999999, blank=False)
     date = models.DateField(auto_now_add=True)
