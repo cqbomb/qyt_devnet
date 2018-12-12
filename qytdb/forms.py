@@ -25,6 +25,7 @@ class UserForm(forms.Form):
 
 
 class DeviceForm(forms.Form):
+    required_css_class = 'required'
     name = forms.CharField(max_length=100,
                            min_length=2,
                            label='设备名称',
@@ -34,7 +35,7 @@ class DeviceForm(forms.Form):
                                      label='IP地址',
                                      widget=forms.TextInput(attrs={"class": "form-control"}))
     description = forms.CharField(label="设备描述",
-                                  required=True,
+                                  required=False,
                                   widget=forms.Textarea(attrs={"class": "form-control", "rows": 3}))
     type_choices = (("switch", "switch"), ("Router", "Router"), ("ASA", "ASA"))
     type = forms.CharField(label='设备类型',

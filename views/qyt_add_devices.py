@@ -7,6 +7,9 @@
 # https://ke.qq.com/course/271956?tuin=24199d8a
 
 from qytdb.models import Devicedb
+from qytdb.models import Devicecpumem
+from qytdb.models import Device_reachable
+from qytdb.models import Deviceinterfaces
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from qytdb.forms import DeviceForm
@@ -28,8 +31,14 @@ def add_devices(request):
                           ssh_password=request.POST.get('ssh_password'),
                           enable_password=request.POST.get('enable_password'),)
             d1.save()
+            d2 = Devicecpumem(name=request.POST.get('name'))
+            d2.save()
+            d3 = Deviceinterfaces(name=request.POST.get('name'))
+            d3.save()
+            d4 = Device_reachable(name=request.POST.get('name'))
+            d4.save()
             # 写入成功后,重定向返回展示所有虚拟机信息的页面
-            return HttpResponseRedirect('/devicelist/')
+            return HttpResponseRedirect('/showdevices/')
         else:  # 如果Form校验失败,返回客户在Form中输入的内容和报错信息
             # 如果检查到错误,会添加错误内容到form内,例如:<ul class="errorlist"><li>QQ号码已经存在</li></ul>
             return render(request, 'add_devices.html', {'form': form})

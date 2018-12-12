@@ -19,10 +19,10 @@ class Devicedb(models.Model):
 class Deviceinterfaces(models.Model):
     name = models.CharField(max_length=999, unique=True, blank=False)
     interfaces_num = models.IntegerField(default=0, blank=True)
-    interfaces = JSONField(blank=True)
-    interfaces_bw = JSONField(blank=True)
-    interfaces_max_utilization = JSONField(blank=True)
-    interfaces_current_utilization = JSONField(blank=True)
+    interfaces = models.CharField(max_length=99999, blank=True)
+    interfaces_bw = models.CharField(max_length=99999, blank=True)
+    interfaces_max_utilization = models.CharField(max_length=99999, blank=True)
+    interfaces_current_utilization = models.CharField(max_length=99999, blank=True)
 
 
 class Devicecpumem(models.Model):
@@ -34,10 +34,10 @@ class Devicecpumem(models.Model):
 
 
 class Devicestatus(models.Model):
-    name = models.CharField(max_length=999, unique=True, blank=False)
-    interfaces = JSONField(blank=True)
-    interfaces_rx = JSONField(blank=True)
-    interfaces_tx = JSONField(blank=True)
+    name = models.CharField(max_length=999, blank=False)
+    interfaces = models.CharField(max_length=99999, blank=True)
+    interfaces_rx = models.CharField(max_length=99999, blank=True)
+    interfaces_tx = models.CharField(max_length=99999, blank=True)
     cpu = models.IntegerField(default=0, blank=True)
     mem = models.IntegerField(default=0, blank=True)
     date = models.DateField(auto_now_add=True)
@@ -50,7 +50,7 @@ class Device_reachable(models.Model):
 
 
 class Deviceconfig(models.Model):
-    name = models.CharField(max_length=999, unique=True, blank=False)
+    name = models.CharField(max_length=999, blank=False)
     hash = models.CharField(max_length=9999, blank=False)
     config = models.CharField(max_length=999999, blank=False)
     date = models.DateField(auto_now_add=True)

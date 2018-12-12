@@ -1,5 +1,10 @@
 from django.contrib import admin
-from qytdb.models import Devicedb, Deviceconfig, Devicecpumem, Deviceinterfaces, Devicestatus, Device_reachable
+from qytdb.models import Devicedb
+from qytdb.models import Deviceconfig
+from qytdb.models import Devicecpumem
+from qytdb.models import Deviceinterfaces
+from qytdb.models import Devicestatus
+from qytdb.models import Device_reachable
 
 admin.site.register(Devicedb)
 admin.site.register(Deviceconfig)
