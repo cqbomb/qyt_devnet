@@ -40,7 +40,7 @@ class Devicestatus(models.Model):
     interfaces_tx = models.CharField(max_length=99999, blank=True)
     cpu = models.IntegerField(default=0, blank=True)
     mem = models.IntegerField(default=0, blank=True)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
 
 
 class Device_reachable(models.Model):
