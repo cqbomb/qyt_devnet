@@ -20,18 +20,23 @@ ssh_password = "Cisc0123"
 def reachable_test():
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
-    cursor.execute("select ip, type, name from qytdb_devicedb")
+    cursor.execute("select ip, type, name, snmp_ro_community, ssh_username, ssh_password, enable_password from qytdb_devicedb")
     result = cursor.fetchall()
     for device in result:
         snmp_reachable = "False"
         ssh_reachable = "False"
         try:
-            if "SNMPv2-MIB::sysDescr.0" == snmpv2_get(str(device[0]), "qytangro", "1.3.6.1.2.1.1.1.0", port=161)[0]:
+            if "SNMPv2-MIB::sysDescr.0" == snmpv2_get(str(device[0]), str(device[3]), "1.3.6.1.2.1.1.1.0", port=161)[0]:
                 snmp_reachable = "True"
         except Exception:
             snmp_reachable = "False"
-        if ssh_sure_shell_login(str(device[0]), str(device[1]), ssh_username, ssh_password):
-            ssh_reachable = "True"
+        if str(device[1]) == "switch" or str(device[1]) == "Router":
+            if ssh_sure_shell_login(str(device[0]), str(device[1]), str(device[4]), str(device[5])):
+                ssh_reachable = "True"
+        elif str(device[1]) == "ASA":
+            if ssh_sure_shell_login(str(device[0]), str(device[1]), str(device[4]), str(device[5]), str(device[6])):
+                ssh_reachable = "True"
+        print(str(device[0]), str(device[6]), snmp_reachable, ssh_reachable)
         cursor.execute("UPDATE qytdb_device_reachable SET snmp_reachable = '" + snmp_reachable + "', ssh_reachable = '" + ssh_reachable + "' WHERE name = '" + str(device[2]) + "'")
         conn.commit()
 
