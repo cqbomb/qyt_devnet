@@ -12,7 +12,7 @@ import time
 import re
 
 
-def QYT_SSHClient_MultiCMD(ip, username, password, cmd_list, verbose=True):
+def ssh_multicmd(ip, username, password, cmd_list, verbose=True):
     ssh = paramiko.SSHClient()  # 创建SSH Client
     ssh.load_system_host_keys()  # 加载系统SSH密钥
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # 添加新的SSH密钥
@@ -37,7 +37,7 @@ def QYT_SSHClient_MultiCMD(ip, username, password, cmd_list, verbose=True):
     ssh.close()  # 退出ssh会话
 
 
-def QYT_SSHClient_SingleCMD(ip, username, password, cmd):
+def ssh_singlecmd(ip, username, password, cmd):
     try:
         ssh = paramiko.SSHClient()  # 创建SSH Client
         ssh.load_system_host_keys()  # 加载系统SSH密钥
@@ -58,7 +58,7 @@ def ssh_sure_shell_login(ip, type, username, password):
         try:
             # 确认能够使用"show run | in hostname"命令
             # 并且回显有hostname信息
-            result = QYT_SSHClient_SingleCMD(ip, username, password, 'show run | in hostname')
+            result = ssh_singlecmd(ip, username, password, 'show run | in hostname')
             if re.match("^hostname \w+", result.strip()):
                 return True
             else:
@@ -69,9 +69,9 @@ def ssh_sure_shell_login(ip, type, username, password):
     elif type == "ASA":
         try:
             # ASA由于默认并不能进入特权模式,所以需要敲enable,和enable密码
-            result = QYT_SSHClient_MultiCMD(ip, username, password, ['enable', password, 'show run | in hostname'])
+            result = ssh_multicmd(ip, username, password, ['enable', password, 'show run | in hostname'])
             # 确认最后一个命令的输出中有hostname信息
-            if re.match("^hostname \w+", result.strip()):
+            if re.match('^hostname \w+', result.strip()):
                 return True
             else:
                 return False
