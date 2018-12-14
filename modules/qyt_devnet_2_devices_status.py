@@ -45,11 +45,11 @@ def get_devices_status():
             # 接口名称列表 ["Ethernet0/0", "Ethernet0/1", "Ethernet0/2"]
             device_ifs_interfaces = json.dumps([x[0] for x in device_ifs_info ])
             # 接口物理带宽列表 [["Ethernet0/0", "10000000"], ["Ethernet0/1", "10000000"], ["Ethernet0/2", "10000000"]]
-            device_ifs_interfaces_bw = json.dumps([(x[0], x[1]) for x in device_ifs_info])
+            device_ifs_interfaces_bw = json.dumps([(x[0], int(x[1])) for x in device_ifs_info])
             # 接口入向字节数列表 [["Ethernet0/0", "68847030"], ["Ethernet0/1", "42267283"], ["Ethernet0/2", "866265171"]]
-            device_ifs_interfaces_rx = json.dumps([(x[0], x[2]) for x in device_ifs_info])
+            device_ifs_interfaces_rx = json.dumps([(x[0], int(x[2])) for x in device_ifs_info])
             # 接口出向字节数列表 [["Ethernet0/0", "61360003"], ["Ethernet0/1", "884452854"], ["Ethernet0/2", "61475786"]]
-            device_ifs_interfaces_tx = json.dumps([(x[0], x[3]) for x in device_ifs_info])
+            device_ifs_interfaces_tx = json.dumps([(x[0], int(x[3])) for x in device_ifs_info])
 
             # 插入name, interfaces, interfaces_rx, interfaces_tx, cpu, mem, date信息到表qytdb_devicestatus
             sqlcmd = "INSERT INTO qytdb_devicestatus (name, interfaces, interfaces_rx, interfaces_tx, cpu, mem, date) VALUES ('" + device_name + "', '" + device_ifs_interfaces + "', '" + device_ifs_interfaces_rx  + "', '" + device_ifs_interfaces_tx + "', " + str(device_cpu) + ", " + str(device_mem) + ", '" + str(datetime.now()) + "')"
