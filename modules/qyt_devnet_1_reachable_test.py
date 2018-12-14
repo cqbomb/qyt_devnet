@@ -36,7 +36,6 @@ def reachable_test():
         elif str(device[1]) == "ASA":
             if ssh_sure_shell_login(str(device[0]), str(device[1]), str(device[4]), str(device[5]), str(device[6])):
                 ssh_reachable = "True"
-        print(str(device[0]), str(device[6]), snmp_reachable, ssh_reachable)
         cursor.execute("UPDATE qytdb_device_reachable SET snmp_reachable = '" + snmp_reachable + "', ssh_reachable = '" + ssh_reachable + "' WHERE name = '" + str(device[2]) + "'")
         conn.commit()
 
