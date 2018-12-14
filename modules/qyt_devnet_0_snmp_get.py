@@ -40,46 +40,28 @@ def snmpv2_get(ip, community, oid, port=161):
 def get_mem_cpu(ip, type, community):
     if type == "switch":
         # Nexus MEM 使用
-        # print("Nexus MEM 使用")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.12.1", port=161))
         used = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.12.1", port=161)[1])
         # Nexus MEM 闲置
-        # print("Nexus MEM 闲置")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.13.1", port=161))
         free = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.13.1", port=161)[1])
         # Nexus CPU 1 min
-        # print("Nexus CPU 1 min")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.7.1", port=161))
         cpu = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.7.1", port=161)[1])
 
         return int(float(used/(free + used)) * 100), cpu
     elif type == "Router":
         # IOS MEM 使用
-        # print("IOS MEM 使用")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.5.1", port=161))
         used = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.5.1", port=161)[1])
         # IOS MEM 闲置
-        # print("IOS MEM 闲置")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.6.1", port=161))
         free = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.6.1", port=161)[1])
         # IOS CPU 1 min
-        # print("IOS CPU 1 min")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.4.1", port=161))
         cpu = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.4.1", port=161)[1])
 
         return int(float(used / (free + used)) * 100), cpu
     elif type == "ASA":
         # ASA MEM 使用
-        # print("ASA MEM 使用")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.5.1", port=161))
         used = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.5.1", port=161)[1])
         # ASA MEM 闲置
-        # print("ASA MEM 闲置")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.6.1", port=161))
         free = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.6.1", port=161)[1])
         # ASA CPU 1 min
-        # print("ASA CPU 1 min")
-        # print(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.4.1", port=161))
         cpu = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.4.1", port=161)[1])
 
         return int(float(used / (free + used)) * 100), cpu
