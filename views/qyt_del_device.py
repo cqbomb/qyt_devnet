@@ -11,10 +11,12 @@ from qytdb.models import Devicecpumem
 from qytdb.models import Deviceinterfaces
 from qytdb.models import Devicestatus
 from qytdb.models import Device_reachable
+from qytdb.models import Deviceinterfaces_utilization
 from django.http import HttpResponseRedirect
 
 
 def del_device(request, devicename):
+
     m = Devicedb.objects.get(name=devicename)
     m.delete()
     m = Device_reachable.objects.get(name=devicename)
@@ -23,12 +25,16 @@ def del_device(request, devicename):
     m.delete()
     m = Deviceinterfaces.objects.get(name=devicename)
     m.delete()
+    m = Deviceinterfaces_utilization.objects.filter(name=devicename)
+    for x in m:
+        x.delete()
     m = Devicestatus.objects.filter(name=devicename)
     for x in m:
         x.delete()
     m = Deviceconfig.objects.filter(name=devicename)
     for x in m:
         x.delete()
+
     return HttpResponseRedirect('/showdevices/')
 
 

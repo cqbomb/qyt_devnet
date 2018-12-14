@@ -21,8 +21,18 @@ class Deviceinterfaces(models.Model):
     interfaces_num = models.IntegerField(default=0, blank=True)
     interfaces = models.CharField(max_length=99999, blank=True)
     interfaces_bw = models.CharField(max_length=99999, blank=True)
-    interfaces_max_utilization = models.CharField(max_length=99999, blank=True)
-    interfaces_current_utilization = models.CharField(max_length=99999, blank=True)
+
+
+class Deviceinterfaces_utilization(models.Model):
+    name = models.CharField(max_length=999, blank=False)
+    interfaces_bw = models.CharField(max_length=99999, blank=True)
+    interfaces_max_utilization_rx = models.CharField(max_length=99999, blank=True)
+    interfaces_current_speed_rx = models.CharField(max_length=99999, blank=True)
+    interfaces_current_utilization_rx = models.CharField(max_length=99999, blank=True)
+    interfaces_max_utilization_tx = models.CharField(max_length=99999, blank=True)
+    interfaces_current_speed_tx = models.CharField(max_length=99999, blank=True)
+    interfaces_current_utilization_tx = models.CharField(max_length=99999, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
 
 
 class Devicecpumem(models.Model):
@@ -53,6 +63,6 @@ class Deviceconfig(models.Model):
     name = models.CharField(max_length=999, blank=False)
     hash = models.CharField(max_length=9999, blank=False)
     config = models.CharField(max_length=999999, blank=False)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
 
 

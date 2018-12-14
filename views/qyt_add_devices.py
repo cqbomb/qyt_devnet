@@ -10,6 +10,7 @@ from qytdb.models import Devicedb
 from qytdb.models import Devicecpumem
 from qytdb.models import Device_reachable
 from qytdb.models import Deviceinterfaces
+from qytdb.models import Deviceinterfaces_utilization
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from qytdb.forms import DeviceForm
@@ -37,6 +38,8 @@ def add_devices(request):
             d3.save()
             d4 = Device_reachable(name=request.POST.get('name'))
             d4.save()
+            d5 = Deviceinterfaces_utilization(name=request.POST.get('name'))
+            d5.save()
             # 写入成功后,重定向返回展示所有虚拟机信息的页面
             return HttpResponseRedirect('/showdevices/')
         else:  # 如果Form校验失败,返回客户在Form中输入的内容和报错信息

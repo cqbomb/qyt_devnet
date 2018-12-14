@@ -33,13 +33,13 @@ def get_devices_status():
             # print(device_ifs_info)
             device_ifs_num = len(device_ifs_info)
             # print(device_ifs_num)
-            device_ifs_interfaces = json.dumps([ x[0] for x in device_ifs_info ])
+            device_ifs_interfaces = json.dumps([x[0] for x in device_ifs_info ])
             # print(device_ifs_interfaces)
-            device_ifs_interfaces_bw = json.dumps([ {x[0]: x[1]} for x in device_ifs_info ])
+            device_ifs_interfaces_bw = json.dumps([(x[0], x[1]) for x in device_ifs_info])
             # print(device_ifs_interfaces_bw)
-            device_ifs_interfaces_rx = json.dumps([ {x[0]: x[2]} for x in device_ifs_info ])
+            device_ifs_interfaces_rx = json.dumps([(x[0], x[2]) for x in device_ifs_info])
             # print(device_ifs_interfaces_rx)
-            device_ifs_interfaces_tx = json.dumps([ {x[0]: x[3]} for x in device_ifs_info ])
+            device_ifs_interfaces_tx = json.dumps([(x[0], x[3]) for x in device_ifs_info])
             # print(device_ifs_interfaces_tx)
             # print(device_mem)
             # print(device_cpu)
@@ -62,12 +62,13 @@ def get_devices_status():
             cursor.execute(sqlcmd)
             conn.commit()
 
+            sqlcmd = "UPDATE qytdb_deviceinterfaces SET interfaces_num = " + str(device_ifs_num) + ", interfaces = '" + device_ifs_interfaces + "', interfaces_bw = '" + device_ifs_interfaces_bw + "' where name = '" + str(device_name) + "'"
+            # print(sqlcmd)
+            cursor.execute(sqlcmd)
+            conn.commit()
+
         else:
             continue
-    # sqlcmd = "SELECT * from qytdb_devicestatus where date >  CURRENT_TIMESTAMP - INTERVAL '1000 seconds' and name = 'ASA'"
-    # cursor.execute(sqlcmd)
-    # result = cursor.fetchall()
-    # print(json.loads(result[0][3])[1]['Inside'])
 
 
 if __name__ == '__main__':
