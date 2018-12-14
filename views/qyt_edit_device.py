@@ -46,7 +46,7 @@ def edit_device(request, devicename):
             m.snmp_rw_community = request.POST.get('snmp_rw_community')
             m.ssh_username = request.POST.get('ssh_username')
             m.ssh_password = request.POST.get('ssh_password')
-            m.snmp_rw_community = request.POST.get('enable_password')
+            m.enable_password = request.POST.get('enable_password')
             m.save()
             # 写入成功后,重定向返回展示所有学员信息的页面
             return HttpResponseRedirect('/showdevices/')
