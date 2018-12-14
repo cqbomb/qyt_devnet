@@ -28,6 +28,7 @@ def QYT_SSHClient_MultiCMD(ip, username, password, cmd_list, verbose=True):
         chan.send(b'\n')  # 一定要注意输入回车
         time.sleep(2)  # 由于有些回显可能过长，所以可以考虑等待更长一些时间
         x = chan.recv(40960).decode()  # 读取回显，有些回想可能过长，请把接收缓存调大
+        # 此处对源码进行了调整,只是显示最后一个命令的回显
         if verbose and i == cmd_list_len:
             return x.split('\r\n')[1]  # 打印回显
         i += 1
@@ -52,8 +53,11 @@ def QYT_SSHClient_SingleCMD(ip, username, password, cmd):
 
 
 def ssh_sure_shell_login(ip, type, username, password):
+    # 判断设备类型为交换机或者路由器
     if type == "switch" or type == "Router":
         try:
+            # 确认能够使用"show run | in hostname"命令
+            # 并且回显有hostname信息
             result = QYT_SSHClient_SingleCMD(ip, username, password, 'show run | in hostname')
             if re.match("^hostname \w+", result.strip()):
                 return True
@@ -61,9 +65,12 @@ def ssh_sure_shell_login(ip, type, username, password):
                 return False
         except Exception:
             return False
+    # 确认设备为ASA
     elif type == "ASA":
         try:
-            result = QYT_SSHClient_MultiCMD(ip, username, password, ['enable', 'Cisc0123', 'show run | in hostname'])
+            # ASA由于默认并不能进入特权模式,所以需要敲enable,和enable密码
+            result = QYT_SSHClient_MultiCMD(ip, username, password, ['enable', password, 'show run | in hostname'])
+            # 确认最后一个命令的输出中有hostname信息
             if re.match("^hostname \w+", result.strip()):
                 return True
             else:
@@ -74,7 +81,7 @@ def ssh_sure_shell_login(ip, type, username, password):
 
 if __name__ == '__main__':
     # 使用Linux解释器 & WIN解释器
-    # QYT_SSHClient_MultiCMD('192.168.1.104', 'admin', 'Cisc0123', ['enable', 'Cisc0123', 'show run | in hostname'])
-    # print(QYT_SSHClient_SingleCMD('192.168.1.101', 'admin', 'Cisc0123', 'show hostname'))
-    # print(QYT_SSHClient_SingleCMD('192.168.1.101', 'admin', 'Cisc0123', 'show rrr'))
-    print(ssh_sure_shell_login('192.168.1.104', 'asa', 'admin', 'Cisc0123'))
+    print(ssh_sure_shell_login('192.168.1.101', 'switch', 'admin', 'Cisc0123'))
+    print(ssh_sure_shell_login('192.168.1.104', 'ASA', 'admin', 'Cisc0123'))
+    print(ssh_sure_shell_login('192.168.1.105', 'Router', 'admin', 'Cisc0123'))
+
