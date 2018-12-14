@@ -52,7 +52,7 @@ def ssh_singlecmd(ip, username, password, cmd):
         print('%stErrorn %s' % (ip, e))
 
 
-def ssh_sure_shell_login(ip, type, username, password):
+def ssh_sure_shell_login(ip, type, username, password, enable_password="Cisc0123"):
     # 判断设备类型为交换机或者路由器
     if type == "switch" or type == "Router":
         try:
@@ -69,7 +69,7 @@ def ssh_sure_shell_login(ip, type, username, password):
     elif type == "ASA":
         try:
             # ASA由于默认并不能进入特权模式,所以需要敲enable,和enable密码
-            result = ssh_multicmd(ip, username, password, ['enable', password, 'show run | in hostname'])
+            result = ssh_multicmd(ip, username, password, ['enable', enable_password, 'show run | in hostname'])
             # 确认最后一个命令的输出中有hostname信息
             if re.match('^hostname \w+', result.strip()):
                 return True
@@ -82,6 +82,6 @@ def ssh_sure_shell_login(ip, type, username, password):
 if __name__ == '__main__':
     # 使用Linux解释器 & WIN解释器
     print(ssh_sure_shell_login('192.168.1.101', 'switch', 'admin', 'Cisc0123'))
-    print(ssh_sure_shell_login('192.168.1.104', 'ASA', 'admin', 'Cisc0123'))
+    print(ssh_sure_shell_login('192.168.1.104', 'ASA', 'admin', 'Cisc0123', 'Cisc0123'))
     print(ssh_sure_shell_login('192.168.1.105', 'Router', 'admin', 'Cisc0123'))
 
