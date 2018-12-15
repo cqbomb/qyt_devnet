@@ -31,7 +31,11 @@ urlpatterns = [
     path('deletedevice/<str:devicename>/', qyt_del_device.del_device),
     path('editdevice/<str:devicename>/', qyt_edit_device.edit_device),
     path('monitordevice/cpu/', qyt_monitor_device.monitor_cpu),
+    path('monitordevice/cpu/<str:devicename>/', qyt_monitor_device.monitor_cpu_dev),
     path('monitordevice/mem/', qyt_monitor_device.monitor_mem),
+    path('monitordevice/mem/<str:devicename>/', qyt_monitor_device.monitor_mem_dev),
     path('monitordevice/if_speed/', qyt_monitor_device.monitor_if_speed),
+    path('monitordevice/if_speed/<str:devicename>/', qyt_monitor_device.monitor_if_speed_dev),
     path('monitordevice/if_utilization/', qyt_monitor_device.monitor_if_utilization),
+    path('monitordevice/if_utilization/<str:devicename>/', qyt_monitor_device.monitor_if_utilization_dev),
 ]
