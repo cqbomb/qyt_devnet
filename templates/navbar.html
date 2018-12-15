@@ -1,4 +1,4 @@
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
        {% load static %}
         <a href="http://10.1.1.80:8000" class="float-left"><img src="{% static "images/logo_long_new.png" %}" height="50" width=auto></a>
 
@@ -16,13 +16,13 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              监控设备
+              设备监控
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">设备CPU利用率</a>
-              <a class="dropdown-item" href="#">设备MEM利用率</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
+              <a class="dropdown-item" href="/monitordevice/cpu">CPU利用率监控</a>
+              <a class="dropdown-item" href="/monitordevice/mem">内存利用率监控</a>
+              <a class="dropdown-item" href="/monitordevice/if_speed">接口速率监控</a>
+              <a class="dropdown-item" href="/monitordevice/if_utilization">接口利用率监控</a>
             </div>
           </li>
           <li class="nav-item">
