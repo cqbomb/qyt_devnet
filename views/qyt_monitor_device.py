@@ -49,11 +49,39 @@ def monitor_cpu_dev(request, devicename):
 
 
 def monitor_mem(request):
-    return render(request, 'monitor_devices_mem.html')
+    result = Devicedb.objects.all()
+    devices_list = []
+    for x in result:
+        devices_list.append(x.name)
+
+    mems = Devicestatus.objects.filter(name=devices_list[0], date__gte=datetime.now() - timedelta(hours=1))
+
+    mem_data = []
+    mem_time = []
+    tzutc_8 = timezone(timedelta(hours=8))
+    for x in mems:
+        mem_data.append(x.mem)
+        mem_time.append(x.date.astimezone(tzutc_8).strftime('%H:%M'))
+
+    return render(request, 'monitor_devices_mem.html', {'devices_list': devices_list, 'current': devices_list[0], 'mem_data': json.dumps(mem_data), 'mem_time': json.dumps(mem_time)})
 
 
-def monitor_mem_dev(request):
-    return render(request, 'monitor_devices_mem.html')
+def monitor_mem_dev(request, devicename):
+    result = Devicedb.objects.all()
+    devices_list = []
+    for x in result:
+        devices_list.append(x.name)
+
+    mems = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=1))
+
+    mem_data = []
+    mem_time = []
+    tzutc_8 = timezone(timedelta(hours=8))
+    for x in mems:
+        mem_data.append(x.mem)
+        mem_time.append(x.date.astimezone(tzutc_8).strftime('%H:%M'))
+
+    return render(request, 'monitor_devices_mem.html', {'devices_list': devices_list, 'current': devicename, 'mem_data': json.dumps(mem_data), 'mem_time': json.dumps(mem_time)})
 
 
 def monitor_if_speed(request):
