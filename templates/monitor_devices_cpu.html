@@ -51,6 +51,6 @@
 </div>
 
 <script type="text/javascript" language="javascript">
-    chart_line('chart', "{{ current }} CPU利用率", ['2018-8-1', '2018-8-2', '2018-8-3', '2018-8-4', '2018-8-5', '2018-8-6'], [1, 98, 12, 5, 53, 41], ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d']);
+    chart_line('chart', "{{ current }} CPU利用率", {{ cpu_time|safe }}, {{ cpu_data }}, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d']);
 </script>
 {% endblock body %}
