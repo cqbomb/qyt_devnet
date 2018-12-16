@@ -34,43 +34,48 @@
     </ul>
   </div>
   <div class="card-body">
-      {% for ifname in if_list %}
+    <select id="ifname">
+     {% for ifname in if_list %}
+         {% if forloop.counter == 1 %}
+            <option value={{ ifname }} selected="selected">{{ ifname }}</option>
+         {% else %}
+            <option value={{ ifname }}>{{ ifname }}</option>
+         {% endif %}
+     {% endfor %}
+    </select>
+    <select id="direction">
+     <option value="rx" selected="selected">入方向</option>
+     <option value="tx">出方向</option>
+    </select>
+    <!-- 点击按钮,调用json_chart1函数(位于chart_json_functions.js),从URL获取数据,并绘制图表-->
+    <button onClick="if_speed_chart();">查询</button>
       <div class='row'>
           <div class='col col-md-2'>
           </div>
           <div class='col col-md-8'>
-            <canvas id=rx_{{ ifname }}></canvas>
+            <canvas id='chart'></canvas>
           </div>
           <div class='col col-md-2'>
           </div>
       </div>
-      {% endfor %}
-      {% for ifname in if_list %}
-      <div class='row'>
-          <div class='col col-md-2'>
-          </div>
-          <div class='col col-md-8'>
-            <canvas id=tx_{{ ifname }}></canvas>
-          </div>
-          <div class='col col-md-2'>
-          </div>
-      </div>
-      {% endfor %}
+
 
   </div>
 </div>
 </div>
 <script type="text/javascript" language="javascript">
-    let array_rx = {{ speed_rx_data_list|safe }};
-    for (let i in array_rx) {
-        chart_line('rx_'+ array_rx[i][0], array_rx[i][0]+' 入向速率(单位kbps)', array_rx[i][2], array_rx[i][1], ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d']);
-    }
+    function if_speed_chart() {
+        let e = document.getElementById("ifname");
+        let ifname = e.options[e.selectedIndex].value;
 
-    let array_tx = {{ speed_tx_data_list|safe }};
-    for (let i in array_tx) {
-        chart_line('tx_'+ array_tx[i][0], array_tx[i][0]+' 出向速率(单位kbps)', array_tx[i][2], array_tx[i][1], ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d']);
+        let i = document.getElementById("direction");
+        let direction = i.options[i.selectedIndex].value;
+        let url = "/monitordevice/if_speed/{{ current }}/" + ifname + "/" + direction
+        $.getJSON(url, function (data) {//请求URL的JSON,得到数据data,下面是对data的处理
+            chart_line('chart', data.ifname+" "+direction+" 速率(单位Kbps)", data.speed_time, data.speed_data, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'])
+        });
     }
-
+    //chart_line('chart', {{ if_name|safe }}, {{ speed_time_list|safe }}, {{ speed_data_list|safe }}, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d']);
 </script>
 
 {% endblock body %}
