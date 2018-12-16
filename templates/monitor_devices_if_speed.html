@@ -34,6 +34,7 @@
     </ul>
   </div>
   <div class="card-body">
+      <h5 class="card-title", style="color: #9d9d9d"><strong>监控接口速率</strong></h5>
     <select id="ifname">
      {% for ifname in if_list %}
          {% if forloop.counter == 1 %}
@@ -75,7 +76,6 @@
             chart_line('chart', data.ifname+" "+direction+" 速率(单位Kbps)", data.speed_time, data.speed_data, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'])
         });
     }
-    //chart_line('chart', {{ if_name|safe }}, {{ speed_time_list|safe }}, {{ speed_data_list|safe }}, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d']);
 </script>
 
 {% endblock body %}

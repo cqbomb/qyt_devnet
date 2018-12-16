@@ -39,4 +39,6 @@ urlpatterns = [
     path('monitordevice/if_speed/<str:devicename>/<str:ifname>/<str:direction>', qyt_monitor_device.monitor_if_speed_dev_if_direc),
     path('monitordevice/if_utilization/', qyt_monitor_device.monitor_if_utilization),
     path('monitordevice/if_utilization/<str:devicename>/', qyt_monitor_device.monitor_if_utilization_dev),
+    path('monitordevice/if_utilization/<str:devicename>/<str:ifname>/<str:direction>', qyt_monitor_device.monitor_if_utilization_dev_if_direc),
+
 ]
