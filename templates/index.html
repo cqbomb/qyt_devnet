@@ -3,8 +3,56 @@
     乾頤堂DevNET
 {% endblock title %}
 
+{% block js %}
+    <!-- 加载Chart.js的JS文件 -->
+    <!-- 最新的Chart JS 文件 https://cdnjs.com/libraries/Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <!-- 加载本项目创建的chart_json_functions.js的JS文件-->
+    {% load static %}
+    <script src="{% static "js/chart_functions.js" %}"></script>
+    <!-- 加载ajax的JS文件-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{% endblock js %}
+
 {% block body %}
 <div class="container-fluid">
-    <h1>乾頤堂DevNET</h1>
+  <div class="card text-center">
+      <div class="card-body">
+        <div class="row py-2">
+            <div class="col-md-4 py-1">
+                <div class="card">
+                    <div class="card-header">设备健康摘要</div>
+                    <div class="card-body">
+                        <canvas id="chDonut1" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 py-1">
+                <div class="card">
+                    <div class="card-header">CPU利用率摘要</div>
+                    <div class="card-body">
+                        <canvas id="chDonut2" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 py-1">
+                <div class="card">
+                    <div class="card-header">内存利用率摘要</div>
+                    <div class="card-body">
+                        <canvas id="chDonut3" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
 </div>
+</div>
+
+<script type="text/javascript" language="javascript">
+    // 通过URL获取JSON数据,并且渲染饼状图
+    get_json_render_chart('/home/reachable', "chDonut1", "pie");
+    get_json_render_chart('/home/cpu', "chDonut2", "pie");
+    get_json_render_chart('/home/mem', "chDonut3", "pie");
+</script>
+
 {% endblock body %}
