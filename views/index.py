@@ -14,8 +14,13 @@ def index(request):
     devices_cpu_list = []
     devices_mem_list = []
     result = Devicecpumem.objects.order_by("-cpu_max_utilization")
+    i = 1
     for x in result:
-        devices_cpu_list.append({'name': x.name, 'cpu_max': x.cpu_max_utilization, 'cpu_current': x.cpu_current_utilization})
-        devices_mem_list.append({'name': x.name, 'mem_max': x.mem_max_utilization, 'mem_current': x.mem_current_utilization})
+        if i <= 3:
+            devices_cpu_list.append({'name': x.name, 'cpu_max': x.cpu_max_utilization, 'cpu_current': x.cpu_current_utilization})
+            devices_mem_list.append({'name': x.name, 'mem_max': x.mem_max_utilization, 'mem_current': x.mem_current_utilization})
+            i += 1
+        else:
+            break
 
     return render(request, 'index.html', {'devices_cpu_list': devices_cpu_list, 'devices_mem_list': devices_mem_list})

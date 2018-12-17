@@ -55,7 +55,7 @@
       <div class="row py-2">
             <div class="col-md-6 py-1">
                 <div class="card">
-                    <div class="card-header">最大CPU利用率</div>
+                    <div class="card-header">Top 3 CPU利用率</div>
                     <div class="card-body">
                         {% include 'top_cpu_utilization.html'%}
                     </div>
@@ -63,7 +63,7 @@
             </div>
             <div class="col-md-6 py-1">
                 <div class="card">
-                    <div class="card-header">最大内存利用率</div>
+                    <div class="card-header">Top 3 内存利用率</div>
                     <div class="card-body">
                         {% include 'top_mem_utilization.html'%}
                     </div>
@@ -80,13 +80,13 @@
     get_json_render_chart('/home/mem', "chDonut3", "pie");
 </script>
 
-<script>
+<!--script>
     $(document).ready( function () {
         $('#myTable_cpu').DataTable();
     } );
-</script>
+</script-->
     {# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
-    <script>
+<!--script>
     $(document).ready(function() {
         var table = $('#myTable_cpu').DataTable();
 
@@ -104,15 +104,15 @@
             table.row('.selected').remove().draw( false );
         } );
     } );
-</script>
+</script-->
 
-<script>
+<!--script>
     $(document).ready( function () {
         $('#myTable_mem').DataTable();
     } );
-</script>
+</script-->
     {# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
-    <script>
+<!--script>
     $(document).ready(function() {
         var table = $('#myTable_mem').DataTable();
 
@@ -130,6 +130,6 @@
             table.row('.selected').remove().draw( false );
         } );
     } );
-</script>
+</script-->
 
 {% endblock body %}
