@@ -3,6 +3,10 @@
     乾頤堂DevNET
 {% endblock title %}
 
+{% block head %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+{% endblock head %}
+
 {% block js %}
     <!-- 加载Chart.js的JS文件 -->
     <!-- 最新的Chart JS 文件 https://cdnjs.com/libraries/Chart.js -->
@@ -12,7 +16,10 @@
     <script src="{% static "js/chart_functions.js" %}"></script>
     <!-- 加载ajax的JS文件-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 {% endblock js %}
+
 
 {% block body %}
 <div class="container-fluid">
@@ -45,6 +52,24 @@
             </div>
         </div>
       </div>
+      <div class="row py-2">
+            <div class="col-md-6 py-1">
+                <div class="card">
+                    <div class="card-header">最大CPU利用率</div>
+                    <div class="card-body">
+                        {% include 'top_cpu_utilization.html'%}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 py-1">
+                <div class="card">
+                    <div class="card-header">最大内存利用率</div>
+                    <div class="card-body">
+                        {% include 'top_mem_utilization.html'%}
+                    </div>
+                </div>
+            </div>
+      </div>
 </div>
 </div>
 
@@ -53,6 +78,58 @@
     get_json_render_chart('/home/reachable', "chDonut1", "pie");
     get_json_render_chart('/home/cpu', "chDonut2", "pie");
     get_json_render_chart('/home/mem', "chDonut3", "pie");
+</script>
+
+<script>
+    $(document).ready( function () {
+        $('#myTable_cpu').DataTable();
+    } );
+</script>
+    {# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
+    <script>
+    $(document).ready(function() {
+        var table = $('#myTable_cpu').DataTable();
+
+        $('#myTable_cpu tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+
+        $('#button').click( function () {
+            table.row('.selected').remove().draw( false );
+        } );
+    } );
+</script>
+
+<script>
+    $(document).ready( function () {
+        $('#myTable_mem').DataTable();
+    } );
+</script>
+    {# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
+    <script>
+    $(document).ready(function() {
+        var table = $('#myTable_mem').DataTable();
+
+        $('#myTable_mem tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+
+        $('#button').click( function () {
+            table.row('.selected').remove().draw( false );
+        } );
+    } );
 </script>
 
 {% endblock body %}
