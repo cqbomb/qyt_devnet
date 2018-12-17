@@ -81,13 +81,16 @@ def update_deviceinterfaces_utilization():
         # 计算入方向速率列表
         speed_list_rx = []
         for x in zip(json.loads(bytes_result[0][0]), json.loads(bytes_result[1][0])):
-            speed_list_rx.append((x[0][0], interfaces_speed(x[1][1], x[0][1])))
+            # 过滤掉速率为负数的数据
+            if interfaces_speed(x[1][1], x[0][1]) >= 0:
+                speed_list_rx.append((x[0][0], interfaces_speed(x[1][1], x[0][1])))
 
         # 计算出方向速率列表
         speed_list_tx = []
         for x in zip(json.loads(bytes_result[0][1]), json.loads(bytes_result[1][1])):
-            speed_list_tx.append((x[0][0], interfaces_speed(x[1][1], x[0][1])))
-
+            # 过滤掉速率为负数的数据
+            if interfaces_speed(x[1][1], x[0][1]) >= 0:
+                speed_list_tx.append((x[0][0], interfaces_speed(x[1][1], x[0][1])))
 
         # 获取特定设备的物理接口带宽,用于后续计算利用率
         sqlcmd = "SELECT interfaces_bw from qytdb_deviceinterfaces where name = '" + device + "'"
