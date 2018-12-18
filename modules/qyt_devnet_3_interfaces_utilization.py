@@ -18,7 +18,7 @@ psql_db_name = "qytangdb"
 
 # 通过计算当前字节数,与一分钟前字节数的增量来计算接口速率
 def interfaces_speed(now, min_before):
-    current_speed = (now - min_before) * 8 / 60
+    current_speed = round((((now - min_before) * 8 / 60) / 1000), 2)
     return current_speed
 
 
@@ -26,7 +26,7 @@ def interfaces_speed(now, min_before):
 def interfaces_utilization(ifs_speeds_list, ifs_bw_list):
     interfaces_utilization_list = []
     for x in zip(ifs_speeds_list, ifs_bw_list):
-        interfaces_utilization_list.append((x[0][0], x[0][1]/x[1][1]))
+        interfaces_utilization_list.append((x[0][0], round((x[0][1]/x[1][1]) * 100, 2)))
     return interfaces_utilization_list
 
 

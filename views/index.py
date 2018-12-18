@@ -7,7 +7,7 @@
 # https://ke.qq.com/course/271956?tuin=24199d8a
 
 from django.shortcuts import render
-from qytdb.models import Devicecpumem
+from qytdb.models import Devicecpumem, Deviceinterfaces_utilization, Devicedb
 
 
 def index(request):
@@ -22,5 +22,13 @@ def index(request):
             i += 1
         else:
             break
-
+    device_result = Devicedb.objects.all()
+    device_name_list = [device.name for device in device_result]
+    if_utilization_rx = []
+    if_utilization_tx = []
+    for device in device_name_list:
+        utilization_result = Deviceinterfaces_utilization.objects.filter(name=device).last()
+        print(utilization_result.name)
+        print(utilization_result.interfaces_max_utilization_rx)
+        print(utilization_result.interfaces_max_utilization_tx)
     return render(request, 'index.html', {'devices_cpu_list': devices_cpu_list, 'devices_mem_list': devices_mem_list})

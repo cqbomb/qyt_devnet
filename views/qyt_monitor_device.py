@@ -43,7 +43,7 @@ def get_device_if_speed_info(devicename="default"):
         for x in if_speed_rx_data:
             for y in x:
                 if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
-                    name_speed_rx_list.append(round(y[1] / 1000, 2))  # 控制浮点数的境地
+                    name_speed_rx_list.append(y[1])
         speed_rx_data_list.append([name, name_speed_rx_list, if_speed_time])
 
     speed_tx_data_list = []
@@ -52,7 +52,7 @@ def get_device_if_speed_info(devicename="default"):
         for x in if_speed_tx_data:
             for y in x:
                 if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
-                    name_speed_tx_list.append(round(y[1] / 1000, 2))  # 控制浮点数的境地
+                    name_speed_tx_list.append(y[1])
         speed_tx_data_list.append([name, name_speed_tx_list, if_speed_time])
     return devices_list, json.loads(ifs_name.interfaces), speed_rx_data_list, speed_tx_data_list
 
@@ -86,7 +86,7 @@ def get_device_if_utilization_info(devicename="default"):
         for x in if_utilization_rx_data:
             for y in x:
                 if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
-                    name_utilization_rx_list.append(y[1])  # 控制浮点数的境地
+                    name_utilization_rx_list.append(y[1])
         utilization_rx_data_list.append([name, name_utilization_rx_list, if_utilization_time])
 
     utilization_tx_data_list = []
@@ -95,7 +95,7 @@ def get_device_if_utilization_info(devicename="default"):
         for x in if_utilization_tx_data:
             for y in x:
                 if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
-                    name_utilization_tx_list.append(y[1])  # 控制浮点数的境地
+                    name_utilization_tx_list.append(y[1])
         utilization_tx_data_list.append([name, name_utilization_tx_list, if_utilization_time])
     return devices_list, json.loads(ifs_name.interfaces), utilization_rx_data_list, utilization_tx_data_list
 

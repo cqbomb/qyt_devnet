@@ -73,7 +73,7 @@
         let direction = i.options[i.selectedIndex].value;
         let url = "/monitordevice/if_utilization/{{ current }}/" + ifname + "/" + direction
         $.getJSON(url, function (data) {//请求URL的JSON,得到数据data,下面是对data的处理
-            chart_line('chart', data.ifname+" "+direction+" 利用率", data.utilization_time, data.utilization_data, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'])
+            chart_line('chart', data.ifname+" "+direction+" 利用率(单位%)", data.utilization_time, data.utilization_data, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'])
         });
     }
 </script>
