@@ -26,7 +26,11 @@ def interfaces_speed(now, min_before):
 def interfaces_utilization(ifs_speeds_list, ifs_bw_list):
     interfaces_utilization_list = []
     for x in zip(ifs_speeds_list, ifs_bw_list):
-        interfaces_utilization_list.append((x[0][0], round((x[0][1]/x[1][1]) * 100, 2)))
+        interfaces_utilization_percent = round((x[0][1]/x[1][1]) * 100, 2)
+        if interfaces_utilization_percent > 100:
+            interfaces_utilization_percent = 0
+
+        interfaces_utilization_list.append((x[0][0], interfaces_utilization_percent))
     return interfaces_utilization_list
 
 
