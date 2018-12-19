@@ -37,7 +37,7 @@ def get_device_if_speed_info(devicename="default"):
             if_speed_rx_data.append(json.loads(x.interfaces_current_speed_rx))
             if_speed_tx_data.append(json.loads(x.interfaces_current_speed_tx))
             if_speed_time.append(x.date.astimezone(tzutc_8).strftime('%H:%M'))
-        except:
+        except Exception:
             continue
     speed_rx_data_list = []
     for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
@@ -82,7 +82,7 @@ def get_device_if_utilization_info(devicename="default"):
             if_utilization_rx_data.append(json.loads(x.interfaces_current_utilization_rx))
             if_utilization_tx_data.append(json.loads(x.interfaces_current_utilization_tx))
             if_utilization_time.append(x.date.astimezone(tzutc_8).strftime('%H:%M'))
-        except:
+        except Exception:
             continue
 
     utilization_rx_data_list = []
