@@ -10,6 +10,7 @@ from django.shortcuts import render
 from qytdb.models import Devicecpumem, Deviceinterfaces_utilization, Devicedb
 import json
 
+
 def index(request):
     devices_cpu_list = []
     devices_mem_list = []
@@ -27,20 +28,23 @@ def index(request):
     if_utilization_rx = []
     if_utilization_tx = []
     for device in device_name_list:
-        utilization_result = Deviceinterfaces_utilization.objects.filter(name=device).last()
-        name = utilization_result.name
-        u_rx_list = json.loads(utilization_result.interfaces_max_utilization_rx)
-        u_c_rx_list = json.loads(utilization_result.interfaces_current_utilization_rx)
-        u_tx_list = json.loads(utilization_result.interfaces_max_utilization_tx)
-        u_c_tx_list = json.loads(utilization_result.interfaces_current_utilization_tx)
-        u_if_rx_list = []
-        u_if_tx_list = []
-        for x in zip(u_rx_list, u_c_rx_list):
-            u_if_rx_list.append([name, x[0][0], x[0][1], x[1][1]])
-        for x in zip(u_tx_list, u_c_tx_list):
-            u_if_tx_list.append([name, x[0][0], x[0][1], x[1][1]])
-        if_utilization_rx.extend(u_if_rx_list)
-        if_utilization_tx.extend(u_if_tx_list)
+        try:
+            utilization_result = Deviceinterfaces_utilization.objects.filter(name=device).last()
+            name = utilization_result.name
+            u_rx_list = json.loads(utilization_result.interfaces_max_utilization_rx)
+            u_c_rx_list = json.loads(utilization_result.interfaces_current_utilization_rx)
+            u_tx_list = json.loads(utilization_result.interfaces_max_utilization_tx)
+            u_c_tx_list = json.loads(utilization_result.interfaces_current_utilization_tx)
+            u_if_rx_list = []
+            u_if_tx_list = []
+            for x in zip(u_rx_list, u_c_rx_list):
+                u_if_rx_list.append([name, x[0][0], x[0][1], x[1][1]])
+            for x in zip(u_tx_list, u_c_tx_list):
+                u_if_tx_list.append([name, x[0][0], x[0][1], x[1][1]])
+            if_utilization_rx.extend(u_if_rx_list)
+            if_utilization_tx.extend(u_if_tx_list)
+        except Exception:
+            continue
     top_3_if_utilization_rx = sorted(if_utilization_rx, key=lambda x: x[2], reverse=True)[0:3]
     top_3_if_utilization_rx_dict = [{'name': x[0], 'ifname': x[1], 'rx_max': x[2], 'rx_current': x[3]} for x in top_3_if_utilization_rx]
     # print(top_3_if_utilization_rx_dict)
