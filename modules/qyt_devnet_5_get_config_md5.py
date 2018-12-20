@@ -42,10 +42,15 @@ def get_md5_config():
             m = hashlib.md5()
             m.update(run_config.encode())
             md5_value = m.hexdigest()
-
-            sqlcmd = "INSERT INTO qytdb_deviceconfig (name, hash, config, date) VALUES ('" + device[2] + "', '" + md5_value + "', '" + run_config + "', '" + str(datetime.now()) + "')"
-            cursor.execute(sqlcmd)
-            conn.commit()
+            cursor.execute("select hash from qytdb_deviceconfig where name = '" + device[2] + "' order by date desc limit 1")
+            result = cursor.fetchall()
+            if result[0][0] == md5_value:
+                continue
+            else:
+                # print('write db')
+                sqlcmd = "INSERT INTO qytdb_deviceconfig (name, hash, config, date) VALUES ('" + device[2] + "', '" + md5_value + "', '" + run_config + "', '" + str(datetime.now()) + "')"
+                cursor.execute(sqlcmd)
+                conn.commit()
 
         elif device[1] == 'switch':
             run_config_raw = ssh_singlecmd(str(device[0]), device[4], device[5], 'show run')
@@ -64,9 +69,15 @@ def get_md5_config():
             m.update(run_config.encode())
             md5_value = m.hexdigest()
 
-            sqlcmd = "INSERT INTO qytdb_deviceconfig (name, hash, config, date) VALUES ('" + device[2] + "', '" + md5_value + "', '" + run_config + "', '" + str(datetime.now()) + "')"
-            cursor.execute(sqlcmd)
-            conn.commit()
+            cursor.execute("select hash from qytdb_deviceconfig where name = '" + device[2] + "' order by date desc limit 1")
+            result = cursor.fetchall()
+            if result[0][0] == md5_value:
+                continue
+            else:
+                # print('write db')
+                sqlcmd = "INSERT INTO qytdb_deviceconfig (name, hash, config, date) VALUES ('" + device[2] + "', '" + md5_value + "', '" + run_config + "', '" + str(datetime.now()) + "')"
+                cursor.execute(sqlcmd)
+                conn.commit()
         elif device[1] == 'ASA':
             run_config_raw = ssh_multicmd_asa(str(device[0]), device[4], device[5], ['enable', device[6], 'terminal pager 0', 'more system:running-config'])
             list_run_config = run_config_raw.split('\n')
@@ -84,9 +95,15 @@ def get_md5_config():
             m.update(run_config.encode())
             md5_value = m.hexdigest()
 
-            sqlcmd = "INSERT INTO qytdb_deviceconfig (name, hash, config, date) VALUES ('" + device[2] + "', '" + md5_value + "', '" + run_config + "', '" + str(datetime.now()) + "')"
-            cursor.execute(sqlcmd)
-            conn.commit()
+            cursor.execute("select hash from qytdb_deviceconfig where name = '" + device[2] + "' order by date desc limit 1")
+            result = cursor.fetchall()
+            if result[0][0] == md5_value:
+                continue
+            else:
+                # print('write db')
+                sqlcmd = "INSERT INTO qytdb_deviceconfig (name, hash, config, date) VALUES ('" + device[2] + "', '" + md5_value + "', '" + run_config + "', '" + str(datetime.now()) + "')"
+                cursor.execute(sqlcmd)
+                conn.commit()
 
 
 if __name__ == '__main__':
