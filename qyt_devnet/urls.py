@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from views import index, top, qyt_login, qyt_add_devices, qyt_show_devices, qyt_del_device, qyt_edit_device, qyt_monitor_device, qyt_home
+from views import index, top, qyt_login, qyt_add_devices, qyt_show_devices, qyt_del_device, qyt_edit_device
+from views import qyt_monitor_device, qyt_home, qyt_device_config
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,4 +44,6 @@ urlpatterns = [
     path('home/reachable', qyt_home.health_reachable),
     path('home/cpu', qyt_home.health_cpu),
     path('home/mem', qyt_home.health_mem),
+    path('deviceconfig/', qyt_device_config.device_config),
+    path('deviceconfig/<str:devname>', qyt_device_config.device_config_dev),
 ]

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}
+    乾頤堂设备配置
+{% endblock title %}
+
+{% block js %}
+    <!-- 加载Chart.js的JS文件 -->
+    <!-- 最新的Chart JS 文件 https://cdnjs.com/libraries/Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <!-- 加载本项目创建的chart_json_functions.js的JS文件-->
+    {% load static %}
+    <script src="{% static "js/chart_functions.js" %}"></script>
+    <!-- 加载ajax的JS文件-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+{% endblock js %}
+
+{% block body %}
+
+<div class="container-fluid">
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      {% for device in devices_list %}
+          {% if device == current %}
+          <li class="nav-item">
+            <a class="nav-link active" href="/deviceconfig/{{ device }}">{{ device }}</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="/deviceconfig/{{ device }}">{{ device }}</a>
+          </li>
+          {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="card-body">
+            <table class="table table-bordered" id="myTable_config">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">设备名</th>
+                      <th scope="col">配置HASH值</th>
+                      <th scope="col">配置备份时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id ="myTable_config">
+                    {% for device in device_config_date_hash %}
+                    <tr>
+                      <th scope="row" align="center" valign="center" >{{ forloop.counter }}</th>
+                      <td align="center" valign="center" style="color:black"><strong>{{ device.name }}</strong></td>
+                      <td align="center" valign="center" style="color:black"><strong>{{ device.hash }}</strong></td>
+                      <td align="center" valign="center" style="color:black"><strong>{{ device.date }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+            </table>
+  </div>
+</div>
+</div>
+
+
+<script>
+    $(document).ready( function () {
+        $('#myTable_config').DataTable();
+    } );
+</script>
+    {# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
+<script>
+    $(document).ready(function() {
+        var table = $('#myTable_config').DataTable();
+
+        $('#myTable_config tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+
+        $('#button').click( function () {
+            table.row('.selected').remove().draw( false );
+        } );
+    } );
+</script>
+{% endblock body %}
