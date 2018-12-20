@@ -120,7 +120,6 @@ def monitor_cpu(request):
     try:
         devicename = devices_list[0]
 
-
         cpus = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=1))
 
         cpu_data = []
