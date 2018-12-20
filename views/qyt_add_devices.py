@@ -11,10 +11,11 @@ from qytdb.models import Devicecpumem
 from qytdb.models import Device_reachable
 from qytdb.models import Deviceinterfaces
 from qytdb.models import Deviceinterfaces_utilization
+from qytdb.models import Deviceconfig
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from qytdb.forms import DeviceForm
-
+from modules.qyt_devnet_6_get_device_config_md5 import get_config_md5_from_device
 
 def add_devices(request):
     if request.method == 'POST':
@@ -40,6 +41,18 @@ def add_devices(request):
             d4.save()
             d5 = Deviceinterfaces_utilization(name=request.POST.get('name'))
             d5.save()
+
+            device = Devicedb.objects.get(name=request.POST.get('name'))
+
+            if device.enable_password:
+                config, md5 = get_config_md5_from_device(device.ip, device.ssh_username, device.ssh_password, device.type, device.enable_password)
+            else:
+                config, md5 = get_config_md5_from_device(device.ip, device.ssh_username, device.ssh_password, device.type)
+            d6 = Deviceconfig(name=request.POST.get('name'),
+                              hash=md5,
+                              config=config)
+            d6.save()
+
             # 写入成功后,重定向返回展示所有虚拟机信息的页面
             return HttpResponseRedirect('/showdevices/')
         else:  # 如果Form校验失败,返回客户在Form中输入的内容和报错信息

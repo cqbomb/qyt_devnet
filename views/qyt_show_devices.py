@@ -17,7 +17,7 @@ def show_devices(request):
     devices_list = []
     for x in result:
         # 产生学员信息的字典
-        print(x.name)
+        # print(x.name)
         devices_dict = {}
         # 为了不在模板中拼接字符串,提前为删除和编辑页面产生URI
         devices_dict['name_delete'] = "/deletedevice/" + str(x.name) + "/"
