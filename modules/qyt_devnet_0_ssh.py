@@ -44,7 +44,7 @@ def ssh_multicmd_asa(ip, username, password, cmd_list, verbose=True):
     ssh.connect(ip, port=22, username=username, password=password, timeout=5, compress=True)  # SSH连接
 
     chan = ssh.invoke_shell()  # 激活交互式shell
-    time.sleep(1)
+    time.sleep(2)
     x = chan.recv(2048).decode()  # 接收回显信息
     cmd_list_len = len(cmd_list)
     i = 1
