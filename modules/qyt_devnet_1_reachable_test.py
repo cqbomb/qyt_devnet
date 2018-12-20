@@ -13,8 +13,6 @@ psql_ip = "192.168.1.11"
 psql_username = "qytangdbuser"
 psql_password = "Cisc0123"
 psql_db_name = "qytangdb"
-ssh_username = "admin"
-ssh_password = "Cisc0123"
 
 
 def reachable_test():
