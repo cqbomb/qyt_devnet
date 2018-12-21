@@ -36,7 +36,7 @@
             <select id="config1">
              {% for device in device_config_date_hash %}
                  {% if forloop.counter == 1 %}
-                    <option value={{ device.id }}selected="selected">{{ device.id }} : {{ device.date }}</option>
+                    <option value={{ device.id }} selected="selected">{{ device.id }} : {{ device.date }}</option>
                  {% else %}
                     <option value={{ device.id }}>{{ device.id }} : {{ device.date }}</option>
                  {% endif %}
@@ -132,7 +132,7 @@
         let i = document.getElementById("config2");
         let config2 = i.options[i.selectedIndex].value;
         let url = "/deviceconfig/compare/{{ current }}/" + config1 + "/" + config2;
-        window.open(url);
+        window.open(url,'_self');
         }
 </script>
 {% endblock body %}
