@@ -49,4 +49,5 @@ urlpatterns = [
     path('deviceconfig/delete/<str:devname>/<int:id>', qyt_device_config.device_del_config),
     path('deviceconfig/show/<str:devname>/<int:id>', qyt_device_config.device_show_config),
     path('deviceconfig/download/<str:devname>/<int:id>', qyt_device_config.device_download_config),
+    path('deviceconfig/compare/<str:devname>/<int:id1>/<int:id2>', qyt_device_config.device_config_compare),
 ]

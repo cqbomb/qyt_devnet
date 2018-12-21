@@ -100,3 +100,7 @@ def device_download_config(request, devname, id):
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
     return response
 
+
+def device_config_compare(request, devname, id1, id2):
+    return render(request, 'compare_config.html')
+
