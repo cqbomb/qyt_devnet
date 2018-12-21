@@ -39,6 +39,7 @@
                       <th scope="col">设备名</th>
                       <th scope="col">配置HASH值</th>
                       <th scope="col">配置备份时间</th>
+                      <th scope="col">操作</th>
                     </tr>
                   </thead>
                   <tbody id ="qyt_body">
@@ -48,6 +49,11 @@
                       <td align="center" valign="center" style="color:black"><strong>{{ device.name }}</strong></td>
                       <td align="center" valign="center" style="color:black"><strong>{{ device.hash }}</strong></td>
                       <td align="center" valign="center" style="color:black"><strong>{{ device.date }}</strong></td>
+                      <td align="center" valign="center">
+                        <a href="{{ device.delete_url }}" onclick="return confirmAct();" data-toggle="tooltip" data-placement="top" title="删除此备份配置" class="badge badge-danger">删除</a>
+                        <a href="{{ device.show_url }}"  data-toggle="tooltip" data-placement="top" title="查看此备份配置" class="badge badge-success">查看</a>
+                        <a href="{{ device.download_url }}"  data-toggle="tooltip" data-placement="top" title="下载此备份配置" class="badge badge-success">下载</a>
+                      </td>
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -81,5 +87,18 @@
             table.row('.selected').remove().draw( false );
         } );
     } );
+</script>
+
+<script type="text/javascript" language="javascript">
+    <!--
+    function confirmAct()
+    {
+        if(confirm('确定要执行此删除操作吗?'))
+        {
+            return true;
+        }
+        return false;
+    }
+    //-->
 </script>
 {% endblock body %}

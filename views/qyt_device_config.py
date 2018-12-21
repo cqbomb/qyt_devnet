@@ -26,11 +26,17 @@ def device_config(request):
         tzutc_8 = timezone(timedelta(hours=8))
         for x in deviceconfig:
             # print(x)
-            device_config_date_hash.append({'name': devicename, 'hash': x.hash, 'date': x.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M')})
+            device_config_date_hash.append({'name': devicename,
+                                            'hash': x.hash,
+                                            'date': x.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M'),
+                                            'delete_url': '/deviceconfig/delete/' + devicename + '/' + str(x.id) + '/',
+                                            'show_url': '/deviceconfig/show/' + devicename + '/' + str(x.id) + '/',
+                                            'download_url': '/deviceconfig/download/' + devicename + '/' + str(+ x.id) + '/'})
         # print(device_config_date_hash)
         return render(request, 'device_config.html', {'devices_list': devices_list, 'current': devicename, 'device_config_date_hash': device_config_date_hash})
 
-    except Exception:
+    except Exception as e:
+        print(e)
         return render(request, 'device_config.html')
 
 
@@ -50,10 +56,28 @@ def device_config_dev(request, devname):
         for x in deviceconfig:
             # print(x)
             device_config_date_hash.append(
-                {'name': devicename, 'hash': x.hash, 'date': x.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M')})
+                {'name': devicename,
+                 'hash': x.hash,
+                 'date': x.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M'),
+                 'delete_url': '/deviceconfig/delete/' + devicename + '/' + str(x.id) + '/',
+                 'show_url': '/deviceconfig/show/' + devicename + '/' + str(x.id) + '/',
+                 'download_url': '/deviceconfig/download/' + devicename + '/' + str(+ x.id) + '/'})
         # print(device_config_date_hash)
         return render(request, 'device_config.html', {'devices_list': devices_list, 'current': devicename,
                                                       'device_config_date_hash': device_config_date_hash})
 
-    except Exception:
+    except Exception as e:
+        print(e)
         return render(request, 'device_config.html')
+
+
+def device_show_config(request, devname, id):
+    pass
+
+
+def device_del_config(request, devname, id):
+    pass
+
+
+def device_download_config(request, devname, id):
+    pass

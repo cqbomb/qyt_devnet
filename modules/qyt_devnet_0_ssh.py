@@ -51,7 +51,7 @@ def ssh_multicmd_asa(ip, username, password, cmd_list, verbose=True):
     for cmd in cmd_list:  # 读取命令
         chan.send(cmd.encode())  # 执行命令，注意字串都需要编码为二进制字串
         chan.send(b'\n')  # 一定要注意输入回车
-        time.sleep(3)  # 由于有些回显可能过长，所以可以考虑等待更长一些时间
+        time.sleep(5)  # 由于有些回显可能过长，所以可以考虑等待更长一些时间
         x = chan.recv(40960).decode()  # 读取回显，有些回想可能过长，请把接收缓存调大
         # 此处对源码进行了调整,只是显示最后一个命令的回显
         if verbose and i == cmd_list_len:
