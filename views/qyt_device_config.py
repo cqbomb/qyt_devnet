@@ -73,7 +73,12 @@ def device_config_dev(request, devname):
 
 
 def device_show_config(request, devname, id):
-    pass
+    deviceconfig = Deviceconfig.objects.get(name=devname, id=id)
+    print(deviceconfig)
+    tzutc_8 = timezone(timedelta(hours=8))
+    return render(request, 'show_config.html', {'devicename': devname,
+                                                'date': deviceconfig.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M'),
+                                                'config': deviceconfig.config})
 
 
 def device_del_config(request, devname, id):
