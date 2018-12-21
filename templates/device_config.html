@@ -32,11 +32,32 @@
         </ul>
       </div>
         <div class="card-body">
+          <h5 class="card-title", style="color: #9d9d9d"><strong>配置对比(选择唯一ID）</strong></h5>
+            <select id="config1">
+             {% for device in device_config_date_hash %}
+                 {% if forloop.counter == 1 %}
+                    <option value={{ device.id }}selected="selected">{{ device.id }} : {{ device.date }}</option>
+                 {% else %}
+                    <option value={{ device.id }}>{{ device.id }} : {{ device.date }}</option>
+                 {% endif %}
+             {% endfor %}
+            </select>
+            <select id="config2">
+             {% for device in device_config_date_hash %}
+                 {% if forloop.counter == 1 %}
+                    <option value={{ device.id }} selected="selected">{{ device.id }} : {{ device.date }}</option>
+                 {% else %}
+                    <option value={{ device.id }}>{{ device.id }} : {{ device.date }}</option>
+                 {% endif %}
+             {% endfor %}
+            </select>
+            <button onClick="config_compare();">比较</button>
             <table class="table table-bordered" id="qyt_table">
                   <thead class="thead-dark">
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">设备名</th>
+                      <th scope="col">唯一ID</th>
                       <th scope="col">配置HASH值</th>
                       <th scope="col">配置备份时间</th>
                       <th scope="col">操作</th>
@@ -47,6 +68,7 @@
                     <tr>
                       <th scope="row" align="center" valign="center" >{{ forloop.counter }}</th>
                       <td align="center" valign="center" style="color:black"><strong>{{ device.name }}</strong></td>
+                      <td align="center" valign="center" style="color:black"><strong>{{ device.id }}</strong></td>
                       <td align="center" valign="center" style="color:black"><strong>{{ device.hash }}</strong></td>
                       <td align="center" valign="center" style="color:black"><strong>{{ device.date }}</strong></td>
                       <td align="center" valign="center">
@@ -100,5 +122,19 @@
         return false;
     }
     //-->
+</script>
+
+<script type="text/javascript" language="javascript">
+    function config_compare() {
+        let e = document.getElementById("config1");
+        let config1 = e.options[e.selectedIndex].value;
+
+        let i = document.getElementById("config2");
+        let config2 = i.options[i.selectedIndex].value;
+        let url = "/monitordevice/if_speed/{{ current }}/" + ifname + "/" + direction
+        $.getJSON(url, function (data) {//请求URL的JSON,得到数据data,下面是对data的处理
+            chart_line('chart', data.ifname+" "+direction+" 速率(单位Kbps)", data.speed_time, data.speed_data, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'])
+        });
+    }
 </script>
 {% endblock body %}

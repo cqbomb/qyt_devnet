@@ -29,6 +29,7 @@ def device_config(request):
             # print(x)
             device_config_date_hash.append({'name': devicename,
                                             'hash': x.hash,
+                                            'id': x.id,
                                             'date': x.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M'),
                                             'delete_url': '/deviceconfig/delete/' + devicename + '/' + str(x.id),
                                             'show_url': '/deviceconfig/show/' + devicename + '/' + str(x.id),
@@ -60,6 +61,7 @@ def device_config_dev(request, devname):
                 {'name': devicename,
                  'hash': x.hash,
                  'date': x.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M'),
+                 'id': x.id,
                  'delete_url': '/deviceconfig/delete/' + devicename + '/' + str(x.id),
                  'show_url': '/deviceconfig/show/' + devicename + '/' + str(x.id),
                  'download_url': '/deviceconfig/download/' + devicename + '/' + str(+ x.id)})
