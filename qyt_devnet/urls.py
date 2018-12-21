@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from views import index, top, qyt_login, qyt_add_devices, qyt_show_devices, qyt_del_device, qyt_edit_device
-from views import qyt_monitor_device, qyt_home, qyt_device_config
+from views import qyt_monitor_device, qyt_home, qyt_device_config, qyt_netflow
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -50,4 +50,5 @@ urlpatterns = [
     path('deviceconfig/show/<str:devname>/<int:id>', qyt_device_config.device_show_config),
     path('deviceconfig/download/<str:devname>/<int:id>', qyt_device_config.device_download_config),
     path('deviceconfig/compare/<str:devname>/<int:id1>/<int:id2>', qyt_device_config.device_config_compare),
+    path('netflow/', qyt_netflow.netflow_show),
 ]
