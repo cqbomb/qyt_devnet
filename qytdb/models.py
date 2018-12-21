@@ -100,3 +100,22 @@ class Deviceconfig(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
+# Netflow DB
+class Netflow(models.Model):
+    src_ip = models.CharField(max_length=999, blank=False)
+
+    dst_ip = models.CharField(max_length=999, blank=False)
+
+    protocol = models.IntegerField(blank=True)
+
+    src_port = models.IntegerField(blank=True)
+
+    dst_port = models.IntegerField(blank=True)
+
+    in_if_id = models.IntegerField(blank=True)
+
+    in_bytes = models.IntegerField(blank=True)
+
+    date = models.DateTimeField(auto_now_add=True)
+
+
