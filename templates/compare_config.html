@@ -6,12 +6,12 @@
 {% block body %}
 <div class="container-fluid">
     <div class='col-md-8'>
-        <br><h2 style="color: #666666">{{ devicename }} {{ date }}配置备份</h2><br>
+        <br><h2 style="color: #666666">{{ devicename }} {{ id1 }} VS {{ id2 }}</h2><br>
     </div>
     <div class='col-md-8'>
         <form>
             <div class="form-group" align="center">
-                <textarea rows="10" class="form-control" readonly id="textarea" >{{ config }}</textarea>
+                <textarea rows="10" class="form-control" readonly id="textarea" >{{ compare_result }}</textarea>
             </div>
         </form>
         <br>

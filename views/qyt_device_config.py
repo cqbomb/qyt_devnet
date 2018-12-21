@@ -10,7 +10,8 @@ from qytdb.models import Deviceconfig, Devicedb
 from django.shortcuts import render
 from datetime import datetime, timedelta, timezone
 from django.http import HttpResponseRedirect, HttpResponse
-
+from difflib import *
+import re
 
 def device_config(request):
     result = Devicedb.objects.all()
@@ -102,5 +103,14 @@ def device_download_config(request, devname, id):
 
 
 def device_config_compare(request, devname, id1, id2):
-    return render(request, 'compare_config.html')
+    deviceconfig1 = Deviceconfig.objects.get(name=devname, id=id1)
+    config1_list = re.split('\r\n|\n', deviceconfig1.config)
+    deviceconfig2 = Deviceconfig.objects.get(name=devname, id=id2)
+    config2_list = re.split('\r\n|\n', deviceconfig2.config)
+    result = Differ().compare(config1_list, config2_list)
+    print(config1_list)
+    print(config2_list)
+    compare_result = '\r\n'.join(list(result))
+    # print(compare_result)
+    return render(request, 'compare_config.html', {'devicename': devname, 'id1': id1, 'id2': id2, 'compare_result': compare_result})
 
