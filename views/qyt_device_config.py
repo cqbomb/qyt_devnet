@@ -9,7 +9,7 @@
 from qytdb.models import Deviceconfig, Devicedb
 from django.shortcuts import render
 from datetime import datetime, timedelta, timezone
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 
 def device_config(request):
@@ -74,7 +74,7 @@ def device_config_dev(request, devname):
 
 def device_show_config(request, devname, id):
     deviceconfig = Deviceconfig.objects.get(name=devname, id=id)
-    print(deviceconfig)
+    # print(deviceconfig)
     tzutc_8 = timezone(timedelta(hours=8))
     return render(request, 'show_config.html', {'devicename': devname,
                                                 'date': deviceconfig.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M'),
@@ -90,4 +90,11 @@ def device_del_config(request, devname, id):
 
 
 def device_download_config(request, devname, id):
-    pass
+    deviceconfig = Deviceconfig.objects.get(name=devname, id=id)
+    tzutc_8 = timezone(timedelta(hours=8))
+    filename = devname + ' ' + deviceconfig.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M') + '.txt'
+    content = deviceconfig.config.replace('\n', '\r\n')
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
+    return response
+
