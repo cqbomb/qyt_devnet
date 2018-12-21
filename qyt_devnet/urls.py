@@ -51,4 +51,6 @@ urlpatterns = [
     path('deviceconfig/download/<str:devname>/<int:id>', qyt_device_config.device_download_config),
     path('deviceconfig/compare/<str:devname>/<int:id1>/<int:id2>', qyt_device_config.device_config_compare),
     path('netflow/', qyt_netflow.netflow_show),
+    path('netflow/protocol', qyt_netflow.netflow_protocol),
+    path('netflow/top_ip', qyt_netflow.netflow_top_ip),
 ]
