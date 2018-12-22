@@ -29,6 +29,21 @@ def get_threshold_cpu():
         return None
 
 
+def get_threshold_mem():
+    # 连接PSQL数据库
+    conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
+    cursor = conn.cursor()
+    tzutc_8 = timezone(timedelta(hours=8))
+    # 获取表qytdb_devicedb中的ip, type, name, snmp_ro_community信息
+    cursor.execute("select mem_threshold, alarm_interval, last_alarm_time from qytdb_thresholdmem where id=1")
+    result = cursor.fetchall()
+    delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    if delta_time.seconds > result[0][1]*60:
+        return result[0][0]
+    else:
+        return None
+
+
 def get_mail_login():
     # 连接PSQL数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
@@ -46,6 +61,7 @@ def get_mail_login():
 def get_devices_status():
     mail_send = False
     cpu_threshold = get_threshold_cpu()
+    mem_threshold = get_threshold_mem()
     mail_login_info = get_mail_login()
     # 连接PSQL数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
@@ -67,6 +83,10 @@ def get_devices_status():
             device_ifs_info = get_ifs(str(device[0]), device[1], device[3])
             # 获取内存利用率
             device_mem = device_mem_cpu[0]
+            if mem_threshold and mail_login_info:
+                if device_mem > mem_threshold:
+                    qyt_smtp_attachment(mail_login_info[0], mail_login_info[1], mail_login_info[2], mail_login_info[3], mail_login_info[4], device_name + " MEM警告", device_name + "当前MEM利用率为 " + str(device_mem) + "%")
+                    mail_send = True
             # 获取CPU利用率
             device_cpu = device_mem_cpu[1]
             # print(device_cpu)
@@ -119,7 +139,11 @@ def get_devices_status():
             continue
 
     if mail_send:
-        sqlcmd = "UPDATE qytdb_thresholdcpu SET last_alarm_time = '" + str(datetime.now()) + "' where id = 1"
+        time_now = str(datetime.now())
+        sqlcmd = "UPDATE qytdb_thresholdcpu SET last_alarm_time = '" + time_now + "' where id = 1"
+        cursor.execute(sqlcmd)
+        conn.commit()
+        sqlcmd = "UPDATE qytdb_thresholdmem SET last_alarm_time = '" + time_now + "' where id = 1"
         cursor.execute(sqlcmd)
         conn.commit()
 
