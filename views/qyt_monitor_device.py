@@ -177,13 +177,14 @@ def monitor_cpu(request):
     try:
         devicename = devices_list[0]
 
-        cpus = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_cpu()))
+        cpus = Devicestatus.objects.order_by('date').filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_cpu()))
 
         cpu_data = []
         cpu_time = []
         tzutc_8 = timezone(timedelta(hours=8))
         for x in cpus:
             cpu_data.append(x.cpu)
+            print(x.date.astimezone(tzutc_8).strftime('%H:%M'))
             cpu_time.append(x.date.astimezone(tzutc_8).strftime('%H:%M'))
 
         return render(request, 'monitor_devices_cpu.html', {'devices_list': devices_list, 'current': devicename, 'cpu_data': json.dumps(cpu_data), 'cpu_time': json.dumps(cpu_time)})
@@ -198,7 +199,7 @@ def monitor_cpu_dev(request, devicename):
     for x in result:
         devices_list.append(x.name)
 
-    cpus = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_cpu()))
+    cpus = Devicestatus.objects.order_by('date').filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_cpu()))
 
     cpu_data = []
     cpu_time = []
@@ -219,7 +220,7 @@ def monitor_mem(request):
     try:
         devicename = devices_list[0]
 
-        mems = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_mem()))
+        mems = Devicestatus.objects.order_by('date').filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_mem()))
 
         mem_data = []
         mem_time = []
@@ -239,7 +240,7 @@ def monitor_mem_dev(request, devicename):
     for x in result:
         devices_list.append(x.name)
 
-    mems = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_mem()))
+    mems = Devicestatus.objects.order_by('date').filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_mem()))
 
     mem_data = []
     mem_time = []
