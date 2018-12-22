@@ -7,10 +7,68 @@
 # https://ke.qq.com/course/271956?tuin=24199d8a
 
 from qytdb.models import Devicedb, Device_reachable, Devicecpumem, Deviceinterfaces, Devicestatus, Deviceinterfaces_utilization
+from qytdb.models import Devicemonitorintervalcpu, Devicemonitorintervalmem, Devicemonitorintervalspeed, Devicemonitorintervalutilization
 from django.shortcuts import render
 from datetime import datetime, timedelta, timezone
 import json
 from django.http import JsonResponse
+
+
+def getinterval_cpu():
+    result = Devicemonitorintervalcpu.objects.all()
+    if len(result) == 0:
+        d1 = Devicemonitorintervalcpu(id=1,
+                                      name="Devicemonitorintervalcpu",
+                                      cpu_interval=1)
+        d1.save()
+        interval = 1
+    else:
+        interval = Devicemonitorintervalcpu.objects.get(id=1).cpu_interval
+
+    return interval
+
+
+def getinterval_mem():
+    result = Devicemonitorintervalmem.objects.all()
+    if len(result) == 0:
+        d1 = Devicemonitorintervalmem(id=1,
+                                      name="Devicemonitorintervalmem",
+                                      mem_interval=1)
+        d1.save()
+        interval = 1
+    else:
+        interval = Devicemonitorintervalmem.objects.get(id=1).mem_interval
+
+    return interval
+
+
+def getinterval_speed():
+    result = Devicemonitorintervalspeed.objects.all()
+    if len(result) == 0:
+        d1 = Devicemonitorintervalspeed(id=1,
+                                        name="Devicemonitorintervalspeed",
+                                        speed_interval=1)
+        d1.save()
+        interval = 1
+    else:
+        interval = Devicemonitorintervalspeed.objects.get(id=1).speed_interval
+
+    return interval
+
+
+def getinterval_utilization():
+    result = Devicemonitorintervalutilization.objects.all()
+    print(result)
+    if len(result) == 0:
+        d1 = Devicemonitorintervalutilization(id=1,
+                                              name="Devicemonitorintervalutilization",
+                                              utilization_interval=1)
+        d1.save()
+        interval = 1
+    else:
+        interval = Devicemonitorintervalutilization.objects.get(id=1).utilization_interval
+
+    return interval
 
 
 def get_device_if_speed_info(devicename="default"):
@@ -23,9 +81,8 @@ def get_device_if_speed_info(devicename="default"):
         if devicename == 'default':
             devicename = devices_list[0]
 
-
         if_speed = Deviceinterfaces_utilization.objects.filter(name=devicename,
-                                                               date__gte=datetime.now() - timedelta(hours=1))
+                                                               date__gte=datetime.now() - timedelta(hours=getinterval_speed()))
 
         ifs_name = Deviceinterfaces.objects.get(name=devicename)
 
@@ -73,7 +130,7 @@ def get_device_if_utilization_info(devicename="default"):
             devicename = devices_list[0]
 
         if_utilization = Deviceinterfaces_utilization.objects.filter(name=devicename,
-                                                               date__gte=datetime.now() - timedelta(hours=1))
+                                                               date__gte=datetime.now() - timedelta(hours=getinterval_utilization()))
         ifs_name = Deviceinterfaces.objects.get(name=devicename)
 
         if_utilization_rx_data = []
@@ -120,7 +177,7 @@ def monitor_cpu(request):
     try:
         devicename = devices_list[0]
 
-        cpus = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=1))
+        cpus = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_cpu()))
 
         cpu_data = []
         cpu_time = []
@@ -141,7 +198,7 @@ def monitor_cpu_dev(request, devicename):
     for x in result:
         devices_list.append(x.name)
 
-    cpus = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=1))
+    cpus = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_cpu()))
 
     cpu_data = []
     cpu_time = []
@@ -162,7 +219,7 @@ def monitor_mem(request):
     try:
         devicename = devices_list[0]
 
-        mems = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=1))
+        mems = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_mem()))
 
         mem_data = []
         mem_time = []
@@ -182,7 +239,7 @@ def monitor_mem_dev(request, devicename):
     for x in result:
         devices_list.append(x.name)
 
-    mems = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=1))
+    mems = Devicestatus.objects.filter(name=devicename, date__gte=datetime.now() - timedelta(hours=getinterval_mem()))
 
     mem_data = []
     mem_time = []
