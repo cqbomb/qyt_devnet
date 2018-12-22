@@ -130,7 +130,7 @@ def get_device_if_utilization_info(devicename="default"):
             devicename = devices_list[0]
 
         if_utilization = Deviceinterfaces_utilization.objects.filter(name=devicename,
-                                                               date__gte=datetime.now() - timedelta(hours=getinterval_utilization()))
+                                                                     date__gte=datetime.now() - timedelta(hours=getinterval_utilization()))
         ifs_name = Deviceinterfaces.objects.get(name=devicename)
 
         if_utilization_rx_data = []
