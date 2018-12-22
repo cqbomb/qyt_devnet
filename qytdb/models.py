@@ -127,3 +127,23 @@ class LifetimeNetflow(models.Model):
 class LifetimeDevicestatus(models.Model):
     name = models.CharField(max_length=999, blank=False)
     lifetime = models.IntegerField(blank=False)
+
+
+class Devicemonitorintervalcpu(models.Model):
+    name = models.CharField(max_length=999, blank=False)
+    cpu_interval = models.IntegerField(blank=False)
+
+
+class Devicemonitorintervalmem(models.Model):
+    name = models.CharField(max_length=999, blank=False)
+    mem_interval = models.IntegerField(blank=False)
+
+
+class Devicemonitorintervalspeed(models.Model):
+    name = models.CharField(max_length=999, blank=False)
+    speed_interval = models.IntegerField(blank=False)
+
+
+class Devicemonitorintervalutilization(models.Model):
+    name = models.CharField(max_length=999, blank=False)
+    utilization_interval = models.IntegerField(blank=False)

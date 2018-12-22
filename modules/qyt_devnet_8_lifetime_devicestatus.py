@@ -29,6 +29,10 @@ def lifetime_netflow():
     cursor.execute(sqlcmd)
     conn.commit()
 
+    sqlcmd = "DELETE FROM qytdb_deviceinterfaces_utilization where date < CURRENT_TIMESTAMP - INTERVAL '" + str(lifetime_hours) + " hours'"
+    cursor.execute(sqlcmd)
+    conn.commit()
+
 
 if __name__ == "__main__":
     lifetime_netflow()
