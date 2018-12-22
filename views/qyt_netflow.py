@@ -9,6 +9,7 @@ from django.shortcuts import render
 from qytdb.models import Netflow
 import pg8000
 from django.http import JsonResponse
+from qytdb.models import Netflowinterval
 
 psql_ip = "192.168.1.11"
 psql_username = "qytangdbuser"
@@ -26,6 +27,20 @@ protocol_map = {'6/22': 'SSH',
                 '17/5355': 'LLMNR'}
 
 
+def getinterval_netflow():
+    result = Netflowinterval.objects.all()
+    if len(result) == 0:
+        d1 = Netflowinterval(id=1,
+                             name="Netflowinterval",
+                             netflow_interval=1)
+        d1.save()
+        interval = 1
+    else:
+        interval = Netflowinterval.objects.get(id=1).netflow_interval
+
+    return interval
+
+
 def netflow_show(request):
     return render(request, 'netflow.html')
 
@@ -33,7 +48,7 @@ def netflow_show(request):
 def netflow_protocol(request):
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
-    cursor.execute("select dst_port,protocol from qytdb_netflow group by dst_port, protocol")
+    cursor.execute("select dst_port,protocol from qytdb_netflow where date > CURRENT_TIMESTAMP - INTERVAL '" + str(getinterval_netflow()) + " hours' group by dst_port, protocol")
     yourresults = cursor.fetchall()
 
     application_list = []
@@ -46,7 +61,10 @@ def netflow_protocol(request):
     protocol_bytes = []
     for x in application_list:
         # 提取应用(协议,目的端口)的入向字节数
-        cursor.execute("select in_bytes from qytdb_netflow where protocol='%s' and dst_port='%s'" % (x[1], x[0]))
+        sqlcmd = "select in_bytes from qytdb_netflow where protocol=" + str(x[1]) + " and dst_port=" + str(x[0]) + " and date > CURRENT_TIMESTAMP - INTERVAL '" + str(getinterval_netflow()) + " hours'"
+        print(sqlcmd)
+        cursor.execute(sqlcmd)
+
         yourresults = cursor.fetchall()
         bytes_sum = 0
         # 把每一个会话的字节数加起来
@@ -72,7 +90,7 @@ def netflow_protocol(request):
 def netflow_top_ip(request):
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
-    cursor.execute("select src_ip from qytdb_netflow group by src_ip")
+    cursor.execute("select src_ip from qytdb_netflow where date > CURRENT_TIMESTAMP - INTERVAL '" + str(getinterval_netflow()) + " hours' group by src_ip")
     yourresults = cursor.fetchall()
 
     ip_list = []
@@ -81,11 +99,10 @@ def netflow_top_ip(request):
     for dbinfo in yourresults:
         ip_list.append(dbinfo)
 
-
     bytes_list = []
     for x in ip_list:
         # 提取应用(协议,目的端口)的入向字节数
-        sqlcmd = "select in_bytes from qytdb_netflow where src_ip='" + x[0] + "'"
+        sqlcmd = "select in_bytes from qytdb_netflow where src_ip='" + x[0] + "' and date > CURRENT_TIMESTAMP - INTERVAL '" + str(getinterval_netflow()) + " hours'"
         print(sqlcmd)
         cursor.execute(sqlcmd)
         yourresults = cursor.fetchall()
