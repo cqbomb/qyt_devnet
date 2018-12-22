@@ -147,3 +147,9 @@ class Devicemonitorintervalspeed(models.Model):
 class Devicemonitorintervalutilization(models.Model):
     name = models.CharField(max_length=999, blank=False)
     utilization_interval = models.IntegerField(blank=False)
+
+
+class Netflowinterval(models.Model):
+    name = models.CharField(max_length=999, blank=False)
+    netflow_interval = models.IntegerField(blank=False)
+
