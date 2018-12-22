@@ -62,7 +62,7 @@ def netflow_protocol(request):
     for x in application_list:
         # 提取应用(协议,目的端口)的入向字节数
         sqlcmd = "select in_bytes from qytdb_netflow where protocol=" + str(x[1]) + " and dst_port=" + str(x[0]) + " and date > CURRENT_TIMESTAMP - INTERVAL '" + str(getinterval_netflow()) + " hours'"
-        print(sqlcmd)
+        # print(sqlcmd)
         cursor.execute(sqlcmd)
 
         yourresults = cursor.fetchall()
@@ -76,6 +76,12 @@ def netflow_protocol(request):
         # 把协议对于的字节数,写入protocol_bytes
         protocol_bytes.append(bytes_sum)
 
+        zip_list = [x for x in zip(protocol_list, protocol_bytes)]
+
+        sorted_pro_data_list = sorted(zip_list, key=lambda x: x[1], reverse=True)
+        protocol_list = [x[0] for x in sorted_pro_data_list]
+        protocol_bytes = [x[1] for x in sorted_pro_data_list]
+
     if len(protocol_list) > 5:
         labels = protocol_list[:5]
         datas = protocol_bytes[:5]
@@ -83,7 +89,7 @@ def netflow_protocol(request):
         labels = protocol_list
         datas = protocol_bytes
 
-    colors = ['#228b22', '#ffff00', '#ff0000', '#3342FF', '#524b22']
+    colors = ['#ff0000', '#ffff00', '#228b22', '#3342FF', '#524b22']
     return JsonResponse({'colors': colors, 'labels': labels, 'datas': datas})
 
 
@@ -103,7 +109,7 @@ def netflow_top_ip(request):
     for x in ip_list:
         # 提取应用(协议,目的端口)的入向字节数
         sqlcmd = "select in_bytes from qytdb_netflow where src_ip='" + x[0] + "' and date > CURRENT_TIMESTAMP - INTERVAL '" + str(getinterval_netflow()) + " hours'"
-        print(sqlcmd)
+        # print(sqlcmd)
         cursor.execute(sqlcmd)
         yourresults = cursor.fetchall()
         bytes_sum = 0
@@ -114,7 +120,14 @@ def netflow_top_ip(request):
     #     ip_list.append(protocol_map.get(protocol_port, protocol_port))
     #     # 把协议对于的字节数,写入protocol_bytes
         bytes_list.append(bytes_sum)
-    #
+
+    zip_list = [x for x in zip(ip_list, bytes_list)]
+
+    sorted_ip_bytes_list = sorted(zip_list, key=lambda x: x[1], reverse=True)
+
+    ip_list = [x[0] for x in sorted_ip_bytes_list]
+    bytes_list = [x[1] for x in sorted_ip_bytes_list]
+
     if len(ip_list) > 5:
         labels = ip_list[:5]
         datas = bytes_list[:5]
@@ -122,7 +135,7 @@ def netflow_top_ip(request):
         labels = ip_list
         datas = bytes_list
     #
-    colors = ['#228b22', '#ffff00', '#ff0000', '#3342FF', '#524b22']
+    colors = ['#ff0000', '#ffff00', '#228b22', '#3342FF', '#524b22']
     return JsonResponse({'colors': colors, 'labels': labels, 'datas': datas})
 
 
