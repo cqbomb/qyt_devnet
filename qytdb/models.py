@@ -155,6 +155,8 @@ class Thresholdcpu(models.Model):
 
 class Thresholdmem(models.Model):
     mem_threshold = models.IntegerField(blank=False)
+    alarm_interval = models.IntegerField(blank=False)
+    last_alarm_time = models.DateTimeField(auto_now_add=True)
 
 
 class Thresholdutilization(models.Model):
