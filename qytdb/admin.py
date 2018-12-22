@@ -14,7 +14,10 @@ from qytdb.models import Netflowinterval
 from qytdb.models import Netflow
 from qytdb.models import LifetimeDevicestatus
 from qytdb.models import LifetimeNetflow
-
+from qytdb.models import Thresholdcpu
+from qytdb.models import Thresholdmem
+from qytdb.models import Thresholdutilization
+from qytdb.models import Smtplogindb
 
 admin.site.register(Devicedb)
 admin.site.register(Deviceconfig)
@@ -31,4 +34,9 @@ admin.site.register(Netflowinterval)
 admin.site.register(Netflow)
 admin.site.register(LifetimeDevicestatus)
 admin.site.register(LifetimeNetflow)
+admin.site.register(Thresholdcpu)
+admin.site.register(Thresholdmem)
+admin.site.register(Thresholdutilization)
+admin.site.register(Smtplogindb)
+
 

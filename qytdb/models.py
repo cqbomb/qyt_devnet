@@ -155,5 +155,14 @@ class Thresholdmem(models.Model):
     mem_threshold = models.IntegerField(blank=False)
 
 
-class Thresholdmem(models.Model):
-    mem_threshold = models.IntegerField(blank=False)
+class Thresholdutilization(models.Model):
+    utilization_threshold = models.IntegerField(blank=False)
+
+
+class Smtplogindb(models.Model):
+    mailserver = models.CharField(max_length=999, blank=False)
+    mailusername = models.CharField(max_length=999, blank=False)
+    mailpassword = models.CharField(max_length=999, blank=False)
+    mailfrom = models.CharField(max_length=999, blank=False)
+    mailto = models.CharField(max_length=999, blank=False)
+
