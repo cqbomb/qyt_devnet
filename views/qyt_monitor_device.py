@@ -18,7 +18,6 @@ def getinterval_cpu():
     result = Devicemonitorintervalcpu.objects.all()
     if len(result) == 0:
         d1 = Devicemonitorintervalcpu(id=1,
-                                      name="Devicemonitorintervalcpu",
                                       cpu_interval=1)
         d1.save()
         interval = 1
@@ -32,7 +31,6 @@ def getinterval_mem():
     result = Devicemonitorintervalmem.objects.all()
     if len(result) == 0:
         d1 = Devicemonitorintervalmem(id=1,
-                                      name="Devicemonitorintervalmem",
                                       mem_interval=1)
         d1.save()
         interval = 1
@@ -46,7 +44,6 @@ def getinterval_speed():
     result = Devicemonitorintervalspeed.objects.all()
     if len(result) == 0:
         d1 = Devicemonitorintervalspeed(id=1,
-                                        name="Devicemonitorintervalspeed",
                                         speed_interval=1)
         d1.save()
         interval = 1
@@ -61,7 +58,6 @@ def getinterval_utilization():
     print(result)
     if len(result) == 0:
         d1 = Devicemonitorintervalutilization(id=1,
-                                              name="Devicemonitorintervalutilization",
                                               utilization_interval=1)
         d1.save()
         interval = 1

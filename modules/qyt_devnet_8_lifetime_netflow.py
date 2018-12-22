@@ -19,11 +19,11 @@ def lifetime_netflow():
     cursor.execute("SELECT * FROM qytdb_lifetimenetflow")
     result = cursor.fetchall()
     if len(result) == 0:
-        cursor.execute("insert into qytdb_lifetimenetflow values (1, 'netflowlifetime', 24)")
+        cursor.execute("insert into qytdb_lifetimenetflow values (1, 24)")
         conn.commit()
         lifetime_hours = 24
     else:
-        lifetime_hours = result[0][2]
+        lifetime_hours = result[0][1]
 
     sqlcmd = "DELETE FROM qytdb_netflow where date < CURRENT_TIMESTAMP - INTERVAL '" + str(lifetime_hours) + " hours'"
     cursor.execute(sqlcmd)

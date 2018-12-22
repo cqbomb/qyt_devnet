@@ -31,7 +31,6 @@ def getinterval_netflow():
     result = Netflowinterval.objects.all()
     if len(result) == 0:
         d1 = Netflowinterval(id=1,
-                             name="Netflowinterval",
                              netflow_interval=1)
         d1.save()
         interval = 1
