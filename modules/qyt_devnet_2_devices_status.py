@@ -9,15 +9,44 @@ import pg8000
 from qyt_devnet_0_snmp_get import get_mem_cpu
 from qyt_devnet_0_snmp_getnext import get_ifs
 import json
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
+from qyt_devnet_0_smtp import qyt_smtp_attachment
 
-psql_ip = "192.168.1.11"
-psql_username = "qytangdbuser"
-psql_password = "Cisc0123"
-psql_db_name = "qytangdb"
+
+def get_threshold_cpu():
+    # 连接PSQL数据库
+    conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
+    cursor = conn.cursor()
+    tzutc_8 = timezone(timedelta(hours=8))
+    # 获取表qytdb_devicedb中的ip, type, name, snmp_ro_community信息
+    cursor.execute("select cpu_threshold, alarm_interval, last_alarm_time from qytdb_thresholdcpu where id=1")
+    result = cursor.fetchall()
+    delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    if delta_time.seconds > result[0][1]*60:
+        return result[0][0]
+    else:
+        return None
+
+
+def get_mail_login():
+    # 连接PSQL数据库
+    conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
+    cursor = conn.cursor()
+    tzutc_8 = timezone(timedelta(hours=8))
+    # 获取表qytdb_devicedb中的ip, type, name, snmp_ro_community信息
+    cursor.execute("select mailserver, mailusername, mailpassword, mailfrom, mailto from qytdb_smtplogindb where id=1")
+    result = cursor.fetchall()
+    if result:
+        return result[0]
+    else:
+        return None
 
 
 def get_devices_status():
+    mail_send = False
+    cpu_threshold = get_threshold_cpu()
+    mail_login_info = get_mail_login()
     # 连接PSQL数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
@@ -40,6 +69,13 @@ def get_devices_status():
             device_mem = device_mem_cpu[0]
             # 获取CPU利用率
             device_cpu = device_mem_cpu[1]
+            # print(device_cpu)
+            # print(cpu_threshold)
+            # print(mail_login_info)
+            if cpu_threshold and mail_login_info:
+                if device_cpu > cpu_threshold:
+                    qyt_smtp_attachment(mail_login_info[0], mail_login_info[1], mail_login_info[2], mail_login_info[3], mail_login_info[4], device_name + " CPU警告", device_name + "当前CPU利用率为 " + str(device_cpu) + "%")
+                    mail_send = True
             # 通过计算device_ifs_info列表的长度来计算接口数量
             device_ifs_num = len(device_ifs_info)
             # 接口名称列表 ["Ethernet0/0", "Ethernet0/1", "Ethernet0/2"]
@@ -81,6 +117,11 @@ def get_devices_status():
 
         else:
             continue
+
+    if mail_send:
+        sqlcmd = "UPDATE qytdb_thresholdcpu SET last_alarm_time = '" + str(datetime.now()) + "' where id = 1"
+        cursor.execute(sqlcmd)
+        conn.commit()
 
 
 if __name__ == '__main__':

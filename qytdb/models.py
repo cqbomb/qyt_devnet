@@ -149,6 +149,8 @@ class Netflowinterval(models.Model):
 
 class Thresholdcpu(models.Model):
     cpu_threshold = models.IntegerField(blank=False)
+    alarm_interval = models.IntegerField(blank=False)
+    last_alarm_time = models.DateTimeField(auto_now_add=True)
 
 
 class Thresholdmem(models.Model):
