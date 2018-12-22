@@ -119,3 +119,11 @@ class Netflow(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
+class LifetimeNetflow(models.Model):
+    name = models.CharField(max_length=999, blank=False)
+    lifetime = models.IntegerField(blank=False)
+
+
+class LifetimeDevicestatus(models.Model):
+    name = models.CharField(max_length=999, blank=False)
+    lifetime = models.IntegerField(blank=False)

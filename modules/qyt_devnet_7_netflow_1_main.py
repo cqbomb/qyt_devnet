@@ -5,7 +5,27 @@
 # 亁颐堂官网www.qytang.com
 # 教主技术进化论拓展你的技术新边疆
 # https://ke.qq.com/course/271956?tuin=24199d8a
+"""
+flow record Qytang-Record
+ match ipv4 source address
+ match ipv4 destination address
+ match ipv4 protocol
+ match transport destination-port
+ match transport source-port
+ match interface input
+ collect counter bytes
 
+flow exporter Netflow-Exporter
+ destination 192.168.1.10
+ transport udp 9999
+!
+flow monitor Monitor1
+ exporter Netflow-Exporter
+ record Qytang-Record
+!
+interface Ethernet0/1
+ ip flow monitor Monitor1 input
+"""
 import logging
 import sys
 import socketserver
