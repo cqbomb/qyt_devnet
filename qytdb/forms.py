@@ -12,6 +12,7 @@ from django.core.validators import RegexValidator
 
 
 class UserForm(forms.Form):
+    required_css_class = 'required'
     username = forms.CharField(label='用户名',
                                max_length=100,
                                required=True,
@@ -225,6 +226,7 @@ class EditDeviceForm(forms.Form):
 
 
 class SysconfiglifetimeForm(forms.Form):
+    required_css_class = 'required'
     lifetime_regex = RegexValidator(regex=r'^\d{1,5}$',
                                     message="老化时间只能支持最多5位整数")
     devicestatus_lifetime = forms.CharField(validators=[lifetime_regex],
@@ -242,6 +244,7 @@ class SysconfiglifetimeForm(forms.Form):
 
 
 class SysconfigmonitorintervalForm(forms.Form):
+    required_css_class = 'required'
     interval_regex = RegexValidator(regex=r'^\d{1,2}$',
                                     message="监控周期只能支持最多2位整数")
     cpu_interval = forms.CharField(validators=[interval_regex],
@@ -271,6 +274,7 @@ class SysconfigmonitorintervalForm(forms.Form):
 
 
 class SysconfignetflowForm(forms.Form):
+    required_css_class = 'required'
     lifetime_regex = RegexValidator(regex=r'^\d{1,5}$',
                                     message="老化时间只能支持最多5位整数")
     interval_regex = RegexValidator(regex=r'^\d{1,2}$',
@@ -290,6 +294,7 @@ class SysconfignetflowForm(forms.Form):
 
 
 class Sysconfigthreshold(forms.Form):
+    required_css_class = 'required'
     threshold_regex = RegexValidator(regex=r'^1?\d{1,2}$',
                                      message="阈值取值范围为1-100的整数")
     interval_regex = RegexValidator(regex=r'^\d{1,2}$',
@@ -298,37 +303,37 @@ class Sysconfigthreshold(forms.Form):
                                     min_length=1,
                                     max_length=3,
                                     label='CPU告警阈值（单位%）设置为0表示取消',
-                                    required=False,
+                                    required=True,
                                     widget=forms.NumberInput(attrs={"class": "form-control"}))
     cpu_alarm_interval = forms.CharField(validators=[interval_regex],
                                          min_length=1,
                                          max_length=5,
                                          label='CPU告警周期（单位分钟）',
-                                         required=False,
+                                         required=True,
                                          widget=forms.NumberInput(attrs={"class": "form-control"}))
     mem_threshold = forms.CharField(validators=[threshold_regex],
                                     min_length=1,
                                     max_length=3,
                                     label='内存告警阈值（单位%）设置为0表示取消',
-                                    required=False,
+                                    required=True,
                                     widget=forms.NumberInput(attrs={"class": "form-control"}))
     mem_alarm_interval = forms.CharField(validators=[interval_regex],
                                          min_length=1,
                                          max_length=5,
                                          label='内存告警周期（单位分钟）',
-                                         required=False,
+                                         required=True,
                                          widget=forms.NumberInput(attrs={"class": "form-control"}))
     utilization_threshold = forms.CharField(validators=[threshold_regex],
                                             min_length=1,
                                             max_length=3,
                                             label='接口利用率告警阈值（单位%）设置为0表示取消',
-                                            required=False,
+                                            required=True,
                                             widget=forms.NumberInput(attrs={"class": "form-control"}))
     utilization_alarm_interval = forms.CharField(validators=[interval_regex],
                                                  min_length=1,
                                                  max_length=5,
                                                  label='接口利用率告警周期（单位分钟）',
-                                                 required=False,
+                                                 required=True,
                                                  widget=forms.NumberInput(attrs={"class": "form-control"}))
     mailserver = forms.CharField(min_length=1,
                                  max_length=50,
