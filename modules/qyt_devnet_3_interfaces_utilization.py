@@ -60,8 +60,8 @@ def interfaces_utilization(name, dirct, utilization_threshold, mail_login_info, 
         if mail_login_info and utilization_threshold:
             if interfaces_utilization_percent >= utilization_threshold:
                 qyt_smtp_attachment(mail_login_info[0], mail_login_info[1], mail_login_info[2], mail_login_info[3],
-                                    mail_login_info[4], name + " 接口 " + name + " " + dirct + " 方向利用率警告",
-                                    name + " 接口 " + name + " " + dirct + " 方向当前利用率为 " + str(interfaces_utilization_percent) + "%")
+                                    mail_login_info[4], name + " 接口 " + x[0][0] + " " + dirct + " 方向利用率警告",
+                                    name + " 接口 " + x[0][0] + " " + dirct + " 方向当前利用率为 " + str(interfaces_utilization_percent) + "%")
                 mail_send = True
         if interfaces_utilization_percent > 100:
             interfaces_utilization_percent = 0

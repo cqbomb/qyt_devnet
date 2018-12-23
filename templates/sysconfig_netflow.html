@@ -37,8 +37,42 @@ label.required::before {
             {# 调整了bootstrap的显示样式 #}
             <input class="btn btn-primary btn-lg" type='submit' value='提交'>
         </form>
+    <br>
+    <form action="/sysconfig/reset_netflow" method="post">
+            {% csrf_token %}
+            <input class="btn btn-warning btn-lg" type='submit' value='重置Netflow参数到默认' onclick="return confirmAct1();">
+    </form>
+    <br>
+    <form action="/sysconfig/reset_netflow_db" method="post">
+            {% csrf_token %}
+            <input class="btn btn-danger btn-lg" type='submit' value='清空Netflow数据库' onclick="return confirmAct2();">
+    </form>
     </div>
-
 </div>
+    <script type="text/javascript" language="javascript">
+    <!--
+    function confirmAct1()
+    {
+        if(confirm('确定要重置Netflow参数到默认吗?'))
+        {
+            return true;
+        }
+        return false;
+    }
+    //-->
+    </script>
+
+        <script type="text/javascript" language="javascript">
+    <!--
+    function confirmAct2()
+    {
+        if(confirm('确定要清空Netflow数据库吗?'))
+        {
+            return true;
+        }
+        return false;
+    }
+    //-->
+    </script>
 
 {% endblock body %}

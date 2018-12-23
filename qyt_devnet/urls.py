@@ -57,4 +57,9 @@ urlpatterns = [
     path('sysconfig/monitor_interval', qyt_sysconfig.sysconfig_monitor_interval),
     path('sysconfig/threshold_mail', qyt_sysconfig.sysconfig_threshold_mail),
     path('sysconfig/netflow', qyt_sysconfig.sysconfig_netflow),
+    path('sysconfig/reset_lifetime', qyt_sysconfig.sysconfig_reset_lifetime),
+    path('sysconfig/reset_monitor_interval', qyt_sysconfig.sysconfig_reset_monitor_interval),
+    path('sysconfig/reset_threshold_mail', qyt_sysconfig.sysconfig_reset_threshold_mail),
+    path('sysconfig/reset_netflow', qyt_sysconfig.sysconfig_reset_netflow),
+    path('sysconfig/reset_netflow_db', qyt_sysconfig.sysconfig_reset_netflow_db),
 ]

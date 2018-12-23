@@ -11,11 +11,11 @@ from qytdb.models import LifetimeNetflow, LifetimeDevicestatus
 from qytdb.models import Devicemonitorintervalcpu, Devicemonitorintervalmem, Devicemonitorintervalspeed, Devicemonitorintervalutilization
 from qytdb.forms import SysconfiglifetimeForm, SysconfigmonitorintervalForm, SysconfignetflowForm, Sysconfigthreshold
 from qytdb.models import Smtplogindb
-from qytdb.models import Netflowinterval
+from qytdb.models import Netflowinterval, Netflow
 from qytdb.models import Thresholdutilization, Thresholdcpu, Thresholdmem
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-
+from datetime import datetime
 
 def getlifetime():
     result_device_status = LifetimeDevicestatus.objects.get(id=1)
@@ -41,21 +41,43 @@ def getnetflow():
 
 
 def getthreshold_mail():
-    result_thresholdcpu = Thresholdcpu.objects.get(id=1)
-    result_thresholdmem = Thresholdmem.objects.get(id=1)
-    result_thresholdutilization = Thresholdutilization.objects.get(id=1)
-    result_smtplogindb = Smtplogindb.objects.get(id=1)
-    cpu_threshold = result_thresholdcpu.cpu_threshold
-    cpu_alarm_interval = result_thresholdcpu.alarm_interval
-    mem_threshold = result_thresholdmem.mem_threshold
-    mem_alarm_interval = result_thresholdmem.alarm_interval
-    utilization_threshold = result_thresholdutilization.utilization_threshold
-    utilization_alarm_interval = result_thresholdutilization.alarm_interval
-    mailserver = result_smtplogindb.mailserver
-    mailusername = result_smtplogindb.mailusername
-    mailpassword = result_smtplogindb.mailpassword
-    mailfrom = result_smtplogindb.mailfrom
-    mailto = result_smtplogindb.mailto
+    try:
+        result_thresholdcpu = Thresholdcpu.objects.get(id=1)
+        cpu_threshold = result_thresholdcpu.cpu_threshold
+        cpu_alarm_interval = result_thresholdcpu.alarm_interval
+    except Exception:
+        cpu_threshold = ""
+        cpu_alarm_interval = ""
+
+    try:
+        result_thresholdmem = Thresholdmem.objects.get(id=1)
+        mem_threshold = result_thresholdmem.mem_threshold
+        mem_alarm_interval = result_thresholdmem.alarm_interval
+    except Exception:
+        mem_threshold = ''
+        mem_alarm_interval = ''
+
+    try:
+        result_thresholdutilization = Thresholdutilization.objects.get(id=1)
+        utilization_threshold = result_thresholdutilization.utilization_threshold
+        utilization_alarm_interval = result_thresholdutilization.alarm_interval
+    except Exception:
+        utilization_threshold = ''
+        utilization_alarm_interval = ''
+
+    try:
+        result_smtplogindb = Smtplogindb.objects.get(id=1)
+        mailserver = result_smtplogindb.mailserver
+        mailusername = result_smtplogindb.mailusername
+        mailpassword = result_smtplogindb.mailpassword
+        mailfrom = result_smtplogindb.mailfrom
+        mailto = result_smtplogindb.mailto
+    except Exception:
+        mailserver = ''
+        mailusername = ''
+        mailpassword = ''
+        mailfrom = ''
+        mailto = ''
     return cpu_threshold, cpu_alarm_interval, mem_threshold, mem_alarm_interval, utilization_threshold, utilization_alarm_interval, mailserver, mailusername, mailpassword, mailfrom, mailto
 
 
@@ -85,6 +107,18 @@ def sysconfig_lifetime(request):
         form = SysconfiglifetimeForm(initial={'devicestatus_lifetime': devicestatus_lifetime,  # initial填写初始值
                                               'netflow_lifetime': netflow_lifetime})
         return render(request, 'sysconfig_lifetime.html', {'form': form})
+
+
+@login_required()
+def sysconfig_reset_lifetime(request):
+    if request.method == 'POST':
+        result_device_status = LifetimeDevicestatus.objects.get(id=1)
+        result_netflow = LifetimeNetflow.objects.get(id=1)
+        result_device_status.lifetime = 24
+        result_netflow.lifetime = 24
+        result_device_status.save()
+        result_netflow.save()
+        return HttpResponseRedirect('/sysconfig/lifetime')
 
 
 @login_required()
@@ -127,6 +161,27 @@ def sysconfig_monitor_interval(request):
 
 
 @login_required()
+def sysconfig_reset_monitor_interval(request):
+    if request.method == 'POST':
+        result_cpu_interval = Devicemonitorintervalcpu.objects.get(id=1)
+        result_mem_interval = Devicemonitorintervalmem.objects.get(id=1)
+        result_speed_interval = Devicemonitorintervalspeed.objects.get(id=1)
+        result_utilization_interval = Devicemonitorintervalutilization.objects.get(id=1)
+
+        result_cpu_interval.cpu_interval = 1
+        result_mem_interval.mem_interval = 1
+        result_speed_interval.speed_interval = 1
+        result_utilization_interval.utilization_interval = 1
+
+        result_cpu_interval.save()
+        result_mem_interval.save()
+        result_speed_interval.save()
+        result_utilization_interval.save()
+        # 写入成功后,重定向返回展示所有学员信息的页面
+        return HttpResponseRedirect('/sysconfig/monitor_interval')
+
+
+@login_required()
 def sysconfig_netflow(request):
     # 首先获取特定ID学员详细信息
     netflow_info = getnetflow()
@@ -155,6 +210,27 @@ def sysconfig_netflow(request):
 
 
 @login_required()
+def sysconfig_reset_netflow(request):
+    if request.method == 'POST':
+        result_netflow_interval = Netflowinterval.objects.get(id=1)
+        result_netflow_lifetime = LifetimeNetflow.objects.get(id=1)
+        result_netflow_interval.netflow_interval = 1
+        result_netflow_lifetime.lifetime = 24
+
+        result_netflow_interval.save()
+        result_netflow_lifetime.save()
+        # 写入成功后,重定向返回展示所有学员信息的页面
+        return HttpResponseRedirect('/sysconfig/netflow')
+
+
+@login_required()
+def sysconfig_reset_netflow_db(request):
+    if request.method == 'POST':
+        Netflow.objects.all().delete()
+        return HttpResponseRedirect('/sysconfig/netflow')
+
+
+@login_required()
 def sysconfig_threshold_mail(request):
     threshold_mail_info = getthreshold_mail()
 
@@ -176,30 +252,32 @@ def sysconfig_threshold_mail(request):
         form = Sysconfigthreshold(request.POST)
         # 如果请求为POST,并且Form校验通过,把修改过的设备信息写入数据库
         if form.is_valid():
-            result_thresholdcpu = Thresholdcpu.objects.get(id=1)
-            result_thresholdmem = Thresholdmem.objects.get(id=1)
-            result_thresholdutilization = Thresholdutilization.objects.get(id=1)
-            result_smtplogindb = Smtplogindb.objects.get(id=1)
+            S1 = Thresholdcpu(id=1,
+                              cpu_threshold=request.POST.get('cpu_threshold'),
+                              alarm_interval=request.POST.get('cpu_alarm_interval'),
+                              last_alarm_time=datetime.now())
+            S1.save()
 
-            result_thresholdcpu.cpu_threshold = request.POST.get('cpu_threshold')
-            result_thresholdcpu.alarm_interval = request.POST.get('cpu_alarm_interval')
+            S2 = Thresholdmem(id=1,
+                              mem_threshold=request.POST.get('mem_threshold'),
+                              alarm_interval=request.POST.get('mem_alarm_interval'),
+                              last_alarm_time = datetime.now())
+            S2.save()
 
-            result_thresholdmem.mem_threshold = request.POST.get('mem_threshold')
-            result_thresholdmem.alarm_interval = request.POST.get('mem_alarm_interval')
+            S3 = Thresholdutilization(id=1,
+                                      utilization_threshold=request.POST.get('utilization_threshold'),
+                                      alarm_interval=request.POST.get('utilization_alarm_interval'),
+                                      last_alarm_time=datetime.now())
+            S3.save()
 
-            result_thresholdutilization.utilization_threshold = request.POST.get('utilization_threshold')
-            result_thresholdutilization.alarm_interval = request.POST.get('utilization_alarm_interval')
-
-            result_smtplogindb.mailserver = request.POST.get('mailserver')
-            result_smtplogindb.mailusername = request.POST.get('mailusername')
-            result_smtplogindb.mailpassword = request.POST.get('mailpassword')
-            result_smtplogindb.mailfrom = request.POST.get('mailfrom')
-            result_smtplogindb.mailto = request.POST.get('mailto')
-
-            result_thresholdcpu.save()
-            result_thresholdmem.save()
-            result_thresholdutilization.save()
-            result_smtplogindb.save()
+            if request.POST.get('mailserver') and request.POST.get('mailusername') and request.POST.get('mailpassword') and request.POST.get('mailfrom') and request.POST.get('mailto'):
+                S4 = Smtplogindb(id=1,
+                                 mailserver=request.POST.get('mailserver'),
+                                 mailusername=request.POST.get('mailusername'),
+                                 mailpassword=request.POST.get('mailpassword'),
+                                 mailfrom=request.POST.get('mailfrom'),
+                                 mailto=request.POST.get('mailto'))
+                S4.save()
 
             # 写入成功后,重定向返回展示所有学员信息的页面
             return HttpResponseRedirect('/sysconfig/threshold_mail')
@@ -221,4 +299,14 @@ def sysconfig_threshold_mail(request):
         return render(request, 'sysconfig_threshold_mail.html', {'form': form})
 
 
+@login_required()
+def sysconfig_reset_threshold_mail(request):
+    if request.method == 'POST':
+        Thresholdcpu.objects.all().delete()
+        Thresholdmem.objects.all().delete()
+        Thresholdutilization.objects.all().delete()
+        Smtplogindb.objects.all().delete()
+
+        # 写入成功后,重定向返回展示所有学员信息的页面
+        return HttpResponseRedirect('/sysconfig/threshold_mail')
 
