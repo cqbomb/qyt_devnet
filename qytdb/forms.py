@@ -268,3 +268,22 @@ class SysconfigmonitorintervalForm(forms.Form):
                                            label='接口利用率监控周期（单位小时，默认1小时）',
                                            required=True,
                                            widget=forms.NumberInput(attrs={"class": "form-control"}))
+
+
+class SysconfignetflowForm(forms.Form):
+    lifetime_regex = RegexValidator(regex=r'^\d{1,5}$',
+                                    message="老化时间只能支持最多5位整数")
+    interval_regex = RegexValidator(regex=r'^\d{1,2}$',
+                                    message="监控周期只能支持最多2位整数")
+    netflow_interval = forms.CharField(validators=[interval_regex],
+                                       min_length=1,
+                                       max_length=2,
+                                       label='Netflow监控周期（单位小时，默认1小时）',
+                                       required=True,
+                                       widget=forms.NumberInput(attrs={"class": "form-control"}))
+    netflow_lifetime = forms.CharField(validators=[lifetime_regex],
+                                       min_length=1,
+                                       max_length=5,
+                                       label='Netflow老化时间（单位小时，默认24小时）',
+                                       required=True,
+                                       widget=forms.NumberInput(attrs={"class": "form-control"}))

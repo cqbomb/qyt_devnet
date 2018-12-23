@@ -9,7 +9,8 @@
 from django.shortcuts import render
 from qytdb.models import LifetimeNetflow, LifetimeDevicestatus
 from qytdb.models import Devicemonitorintervalcpu, Devicemonitorintervalmem, Devicemonitorintervalspeed, Devicemonitorintervalutilization
-from qytdb.forms import SysconfiglifetimeForm, SysconfigmonitorintervalForm
+from qytdb.forms import SysconfiglifetimeForm, SysconfigmonitorintervalForm, SysconfignetflowForm
+from qytdb.models import Netflowinterval
 from django.http import HttpResponseRedirect
 
 
@@ -27,6 +28,13 @@ def getinterval():
     utilization_interval = Devicemonitorintervalutilization.objects.get(id=1).utilization_interval
 
     return cpu_interval, mem_interval, speed_interval, utilization_interval
+
+
+def getnetflow():
+    result_netflow_interval = Netflowinterval.objects.get(id=1).netflow_interval
+    result_netflow_lifetime= LifetimeNetflow.objects.get(id=1).lifetime
+
+    return result_netflow_interval, result_netflow_lifetime
 
 
 def sysconfig_lifetime(request):
@@ -94,9 +102,35 @@ def sysconfig_monitor_interval(request):
         return render(request, 'sysconfig_monitor_interval.html', {'form': form})
 
 
+def sysconfig_netflow(request):
+    # 首先获取特定ID学员详细信息
+    netflow_info = getnetflow()
+    netflow_interval = netflow_info[0]
+    netflow_lifetime = netflow_info[1]
+
+    if request.method == 'POST':
+        form = SysconfignetflowForm(request.POST)
+        # 如果请求为POST,并且Form校验通过,把修改过的设备信息写入数据库
+        if form.is_valid():
+            result_netflow_interval = Netflowinterval.objects.get(id=1)
+            result_netflow_lifetime = LifetimeNetflow.objects.get(id=1)
+            result_netflow_interval.netflow_interval = request.POST.get('netflow_interval')
+            result_netflow_lifetime.lifetime = request.POST.get('netflow_lifetime')
+
+            result_netflow_interval.save()
+            result_netflow_lifetime.save()
+            # 写入成功后,重定向返回展示所有学员信息的页面
+            return HttpResponseRedirect('/sysconfig/netflow')
+        else:  # 如果Form校验失败,返回客户在Form中输入的内容和报错信息
+            return render(request, 'sysconfig_netflow.html', {'form': form})
+    else:  # 如果不是POST,就是GET,表示为初始访问, 把特定ID客户在数据库中的值,通过初始值的方式展现给客户看
+        form = SysconfignetflowForm(initial={'netflow_interval': netflow_interval,  # initial填写初始值
+                                             'netflow_lifetime': netflow_lifetime})
+        return render(request, 'sysconfig_netflow.html', {'form': form})
+
+
 def sysconfig_threshold_mail(request):
     return render(request, 'sysconfig_threshold_mail.html')
 
 
-def sysconfig_netflow(request):
-    return render(request, 'sysconfig_netflow.html')
+
