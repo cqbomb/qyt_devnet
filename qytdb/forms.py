@@ -222,3 +222,49 @@ class EditDeviceForm(forms.Form):
                 raise forms.ValidationError("设置读写Community之前请激活SNMP")
         else:
             return snmp_rw_community
+
+
+class SysconfiglifetimeForm(forms.Form):
+    lifetime_regex = RegexValidator(regex=r'^\d{1,5}$',
+                                    message="老化时间只能支持最多5位整数")
+    devicestatus_lifetime = forms.CharField(validators=[lifetime_regex],
+                                   min_length=1,
+                                   max_length=5,
+                                   label='设备信息老化时间（单位小时，默认24小时）',
+                                   required=True,
+                                   widget=forms.NumberInput(attrs={"class": "form-control"}))
+    netflow_lifetime = forms.CharField(validators=[lifetime_regex],
+                                   min_length=1,
+                                   max_length=5,
+                                   label='Netflow老化时间（单位小时，默认24小时）',
+                                   required=True,
+                                   widget=forms.NumberInput(attrs={"class": "form-control"}))
+
+
+class SysconfigmonitorintervalForm(forms.Form):
+    interval_regex = RegexValidator(regex=r'^\d{1,2}$',
+                                    message="监控周期只能支持最多2位整数")
+    cpu_interval = forms.CharField(validators=[interval_regex],
+                                   min_length=1,
+                                   max_length=2,
+                                   label='CPU监控周期（单位小时，默认1小时）',
+                                   required=True,
+                                   widget=forms.NumberInput(attrs={"class": "form-control"}))
+    mem_interval = forms.CharField(validators=[interval_regex],
+                                   min_length=1,
+                                   max_length=2,
+                                   label='内存监控周期（单位小时，默认1小时）',
+                                   required=True,
+                                   widget=forms.NumberInput(attrs={"class": "form-control"}))
+    speed_interval = forms.CharField(validators=[interval_regex],
+                                     min_length=1,
+                                     max_length=2,
+                                     label='接口速率监控周期（单位小时，默认1小时）',
+                                     required=True,
+                                     widget=forms.NumberInput(attrs={"class": "form-control"}))
+    utilization_interval = forms.CharField(validators=[interval_regex],
+                                           min_length=1,
+                                           max_length=2,
+                                           label='接口利用率监控周期（单位小时，默认1小时）',
+                                           required=True,
+                                           widget=forms.NumberInput(attrs={"class": "form-control"}))

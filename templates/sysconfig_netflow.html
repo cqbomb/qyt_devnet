@@ -6,7 +6,30 @@
 
 {% block body %}
 <div class="container-fluid">
-  <br><h2 style="color: #666666">系统设置 Netflow相关设置</h2><br>
+      <div class="container">
+        <br><h2 style="color: #666666">系统设置 Netflow相关设置</h2><br>
+        <form action="" method="post">
+            {# 添加CSRF防护的隐含参数Token,主要必须使用render来渲染页面 #}
+            {% csrf_token %}
+            <div class='col-md-8'>
+            {% for field in form %}
+                <div class=form-group>
+                    {# 如果出现Form错误(各种校验错误),在Form展示给客户看 #}
+                    {% if field.errors %}
+                    {# 调整了bootstrap的显示样式 #}
+                    <div class="alert alert-danger" role="alert">{{ field.errors }}</div>
+                    {% endif %}
+                    {# 显示字段的label(名字) #}
+                    {{ field.label_tag }}
+                    {# 显示输入与选择字段 #}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            </div>
+            {# 调整了bootstrap的显示样式 #}
+            <input class="btn btn-primary btn-lg" type='submit' value='提交'>
+        </form>
+    </div>
 
 </div>
 
