@@ -9,11 +9,38 @@
 import pg8000
 import json
 from datetime import datetime
+from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
+from datetime import timezone, timedelta
+from qyt_devnet_0_smtp import qyt_smtp_attachment
 
-psql_ip = "192.168.1.11"
-psql_username = "qytangdbuser"
-psql_password = "Cisc0123"
-psql_db_name = "qytangdb"
+
+def get_mail_login():
+    # 连接PSQL数据库
+    conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
+    cursor = conn.cursor()
+    tzutc_8 = timezone(timedelta(hours=8))
+    # 获取表qytdb_devicedb中的ip, type, name, snmp_ro_community信息
+    cursor.execute("select mailserver, mailusername, mailpassword, mailfrom, mailto from qytdb_smtplogindb where id=1")
+    result = cursor.fetchall()
+    if result:
+        return result[0]
+    else:
+        return None
+
+
+def get_threshold_utilization():
+    # 连接PSQL数据库
+    conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
+    cursor = conn.cursor()
+    tzutc_8 = timezone(timedelta(hours=8))
+    # 获取表qytdb_devicedb中的ip, type, name, snmp_ro_community信息
+    cursor.execute("select utilization_threshold, alarm_interval, last_alarm_time from qytdb_thresholdutilization where id=1")
+    result = cursor.fetchall()
+    delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    if delta_time.seconds > result[0][1]*60:
+        return result[0][0]
+    else:
+        return None
 
 
 # 通过计算当前字节数,与一分钟前字节数的增量来计算接口速率
@@ -23,15 +50,22 @@ def interfaces_speed(now, min_before):
 
 
 # 计算接口利用率
-def interfaces_utilization(ifs_speeds_list, ifs_bw_list):
+def interfaces_utilization(name, dirct, utilization_threshold, mail_login_info, ifs_speeds_list, ifs_bw_list):
+    mail_send = False
     interfaces_utilization_list = []
     for x in zip(ifs_speeds_list, ifs_bw_list):
         interfaces_utilization_percent = round((x[0][1]/x[1][1]) * 100, 2)
+        if mail_login_info and utilization_threshold:
+            if interfaces_utilization_percent >= utilization_threshold:
+                qyt_smtp_attachment(mail_login_info[0], mail_login_info[1], mail_login_info[2], mail_login_info[3],
+                                    mail_login_info[4], name + " 接口 " + name + " " + dirct + " 方向利用率警告",
+                                    name + " 接口 " + name + " " + dirct + " 方向当前利用率为 " + str(interfaces_utilization_percent) + "%")
+                mail_send = True
         if interfaces_utilization_percent > 100:
             interfaces_utilization_percent = 0
 
         interfaces_utilization_list.append((x[0][0], interfaces_utilization_percent))
-    return interfaces_utilization_list
+    return interfaces_utilization_list, mail_send
 
 
 # 判断当前利用率是否超过历史最大利用率,如果超过就替换
@@ -46,6 +80,9 @@ def max_utilization_def(old_max, current):
 
 
 def update_deviceinterfaces_utilization():
+    mail_send = False
+    utilization_threshold = get_threshold_utilization()
+    mail_login_info = get_mail_login()
     # 连接数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
@@ -99,10 +136,19 @@ def update_deviceinterfaces_utilization():
         # 得到特定设备物理接口带宽的列表
         interfaces_bw = json.loads(interfaces_bw_result[0][0])
         # 计算入向接口利用率的列表
-        interfaces_utilization_rx_list = interfaces_utilization(speed_list_rx, interfaces_bw)
-        # 计算出向接口利用率的列表
-        interfaces_utilization_tx_list = interfaces_utilization(speed_list_tx, interfaces_bw)
+        interfaces_utilization_rx_result = interfaces_utilization(device, 'RX', utilization_threshold, mail_login_info, speed_list_rx, interfaces_bw)
 
+        interfaces_utilization_rx_list = interfaces_utilization_rx_result[0]
+
+        if interfaces_utilization_rx_result[1]:
+            mail_send = True
+        # 计算出向接口利用率的列表
+        interfaces_utilization_tx_result = interfaces_utilization(device, 'TX', utilization_threshold, mail_login_info, speed_list_tx, interfaces_bw)
+
+        interfaces_utilization_tx_list = interfaces_utilization_tx_result[0]
+
+        if interfaces_utilization_tx_result[1]:
+            mail_send = True
         # 获取最后一次(id = (SELECT max(id) FROM qytdb_deviceinterfaces_utilization where name = 'device'))记录的历史最大入向和出向接口利用率
         sqlcmd = "SELECT interfaces_max_utilization_rx, interfaces_max_utilization_tx from qytdb_deviceinterfaces_utilization where name = '" + device + "' and id = (SELECT max(id) FROM qytdb_deviceinterfaces_utilization where name = '" + device + "')"
         cursor.execute(sqlcmd)
@@ -134,6 +180,12 @@ def update_deviceinterfaces_utilization():
         # 写入数据到表qytdb_deviceinterfaces_utilization
         sqlcmd = "insert into qytdb_deviceinterfaces_utilization (name, interfaces_bw, interfaces_max_utilization_rx, interfaces_current_speed_rx, interfaces_current_utilization_rx, interfaces_max_utilization_tx, interfaces_current_speed_tx, interfaces_current_utilization_tx, date) values ('" + device + "', '" + json.dumps(interfaces_bw) + "', '" + json.dumps(max_utilization_rx) + "', '" + json.dumps(speed_list_rx) + "', '" + json.dumps(interfaces_utilization_rx_list) + "', '" + json.dumps(max_utilization_tx) + "', '" + json.dumps(speed_list_tx) + "', '" + json.dumps(interfaces_utilization_tx_list) + "', '" + str(datetime.now()) +"')"
         # print(sqlcmd)
+        cursor.execute(sqlcmd)
+        conn.commit()
+
+    if mail_send:
+        time_now = str(datetime.now())
+        sqlcmd = "UPDATE qytdb_thresholdutilization SET last_alarm_time = '" + time_now + "' where id = 1"
         cursor.execute(sqlcmd)
         conn.commit()
 

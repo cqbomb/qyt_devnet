@@ -161,6 +161,8 @@ class Thresholdmem(models.Model):
 
 class Thresholdutilization(models.Model):
     utilization_threshold = models.IntegerField(blank=False)
+    alarm_interval = models.IntegerField(blank=False)
+    last_alarm_time = models.DateTimeField(auto_now_add=True)
 
 
 class Smtplogindb(models.Model):
