@@ -297,7 +297,7 @@ class Sysconfigthreshold(forms.Form):
     cpu_threshold = forms.CharField(validators=[threshold_regex],
                                     min_length=1,
                                     max_length=3,
-                                    label='CPU告警阈值（单位%）',
+                                    label='CPU告警阈值（单位%）设置为0表示取消',
                                     required=False,
                                     widget=forms.NumberInput(attrs={"class": "form-control"}))
     cpu_alarm_interval = forms.CharField(validators=[interval_regex],
@@ -309,7 +309,7 @@ class Sysconfigthreshold(forms.Form):
     mem_threshold = forms.CharField(validators=[threshold_regex],
                                     min_length=1,
                                     max_length=3,
-                                    label='内存告警阈值（单位%）',
+                                    label='内存告警阈值（单位%）设置为0表示取消',
                                     required=False,
                                     widget=forms.NumberInput(attrs={"class": "form-control"}))
     mem_alarm_interval = forms.CharField(validators=[interval_regex],
@@ -321,7 +321,7 @@ class Sysconfigthreshold(forms.Form):
     utilization_threshold = forms.CharField(validators=[threshold_regex],
                                             min_length=1,
                                             max_length=3,
-                                            label='接口利用率告警阈值（单位%）',
+                                            label='接口利用率告警阈值（单位%）设置为0表示取消',
                                             required=False,
                                             widget=forms.NumberInput(attrs={"class": "form-control"}))
     utilization_alarm_interval = forms.CharField(validators=[interval_regex],
