@@ -3,7 +3,15 @@
     系统设置 Netflow相关设置
 {% endblock title %}
 
-
+{% block head %}
+{# 为了在Form中添加必选项的星,需要添加的css #}
+<style type="text/css">
+label.required::before {
+    content: "*";
+    color: red;
+}
+</style>
+{% endblock head %}
 {% block body %}
 <div class="container-fluid">
       <div class="container">

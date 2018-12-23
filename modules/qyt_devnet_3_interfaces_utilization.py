@@ -37,6 +37,8 @@ def get_threshold_utilization():
     cursor.execute("select utilization_threshold, alarm_interval, last_alarm_time from qytdb_thresholdutilization where id=1")
     result = cursor.fetchall()
     delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    # print(delta_time.seconds)
+    # print(result[0][1]*60)
     if delta_time.seconds > result[0][1]*60:
         return result[0][0]
     else:

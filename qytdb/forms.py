@@ -287,3 +287,71 @@ class SysconfignetflowForm(forms.Form):
                                        label='Netflow老化时间（单位小时，默认24小时）',
                                        required=True,
                                        widget=forms.NumberInput(attrs={"class": "form-control"}))
+
+
+class Sysconfigthreshold(forms.Form):
+    threshold_regex = RegexValidator(regex=r'^1?\d{1,2}$',
+                                     message="阈值取值范围为1-100的整数")
+    interval_regex = RegexValidator(regex=r'^\d{1,2}$',
+                                    message="监控周期只能支持最多2位整数")
+    cpu_threshold = forms.CharField(validators=[threshold_regex],
+                                    min_length=1,
+                                    max_length=3,
+                                    label='CPU告警阈值（单位%）',
+                                    required=False,
+                                    widget=forms.NumberInput(attrs={"class": "form-control"}))
+    cpu_alarm_interval = forms.CharField(validators=[interval_regex],
+                                         min_length=1,
+                                         max_length=5,
+                                         label='CPU告警周期（单位分钟）',
+                                         required=False,
+                                         widget=forms.NumberInput(attrs={"class": "form-control"}))
+    mem_threshold = forms.CharField(validators=[threshold_regex],
+                                    min_length=1,
+                                    max_length=3,
+                                    label='内存告警阈值（单位%）',
+                                    required=False,
+                                    widget=forms.NumberInput(attrs={"class": "form-control"}))
+    mem_alarm_interval = forms.CharField(validators=[interval_regex],
+                                         min_length=1,
+                                         max_length=5,
+                                         label='内存告警周期（单位分钟）',
+                                         required=False,
+                                         widget=forms.NumberInput(attrs={"class": "form-control"}))
+    utilization_threshold = forms.CharField(validators=[threshold_regex],
+                                            min_length=1,
+                                            max_length=3,
+                                            label='接口利用率告警阈值（单位%）',
+                                            required=False,
+                                            widget=forms.NumberInput(attrs={"class": "form-control"}))
+    utilization_alarm_interval = forms.CharField(validators=[interval_regex],
+                                                 min_length=1,
+                                                 max_length=5,
+                                                 label='接口利用率告警周期（单位分钟）',
+                                                 required=False,
+                                                 widget=forms.NumberInput(attrs={"class": "form-control"}))
+    mailserver = forms.CharField(min_length=1,
+                                 max_length=50,
+                                 label='邮件服务器',
+                                 required=False,
+                                 widget=forms.TextInput(attrs={"class": "form-control"}))
+    mailusername = forms.CharField(min_length=1,
+                                 max_length=50,
+                                 label='用户名',
+                                 required=False,
+                                   widget=forms.TextInput(attrs={"class": "form-control"}))
+    mailpassword = forms.CharField(min_length=1,
+                                 max_length=50,
+                                 label='密码',
+                                 required=False,
+                                   widget=forms.TextInput(attrs={"class": "form-control"}))
+    mailfrom = forms.CharField(min_length=1,
+                                 max_length=50,
+                                 label='发件人FROM',
+                                 required=False,
+                                 widget=forms.TextInput(attrs={"class": "form-control"}))
+    mailto = forms.CharField(min_length=1,
+                                 max_length=50,
+                                 label='收件人TO',
+                                 required=False,
+                                 widget=forms.TextInput(attrs={"class": "form-control"}))
