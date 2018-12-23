@@ -14,6 +14,7 @@ from qytdb.models import Smtplogindb
 from qytdb.models import Netflowinterval
 from qytdb.models import Thresholdutilization, Thresholdcpu, Thresholdmem
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 
 def getlifetime():
@@ -58,6 +59,7 @@ def getthreshold_mail():
     return cpu_threshold, cpu_alarm_interval, mem_threshold, mem_alarm_interval, utilization_threshold, utilization_alarm_interval, mailserver, mailusername, mailpassword, mailfrom, mailto
 
 
+@login_required()
 def sysconfig_lifetime(request):
     # 首先获取特定ID学员详细信息
     lifetime = getlifetime()
@@ -85,6 +87,7 @@ def sysconfig_lifetime(request):
         return render(request, 'sysconfig_lifetime.html', {'form': form})
 
 
+@login_required()
 def sysconfig_monitor_interval(request):
     # 首先获取特定ID学员详细信息
     interval = getinterval()
@@ -123,6 +126,7 @@ def sysconfig_monitor_interval(request):
         return render(request, 'sysconfig_monitor_interval.html', {'form': form})
 
 
+@login_required()
 def sysconfig_netflow(request):
     # 首先获取特定ID学员详细信息
     netflow_info = getnetflow()
@@ -150,6 +154,7 @@ def sysconfig_netflow(request):
         return render(request, 'sysconfig_netflow.html', {'form': form})
 
 
+@login_required()
 def sysconfig_threshold_mail(request):
     threshold_mail_info = getthreshold_mail()
 

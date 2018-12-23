@@ -9,6 +9,7 @@ from qytdb.models import Devicedb
 from django.http import HttpResponseRedirect
 from qytdb.forms import EditDeviceForm
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
 def getdeviceinfo(name):
@@ -29,6 +30,7 @@ def getdeviceinfo(name):
     return device_dict
 
 
+@login_required()
 def edit_device(request, devicename):
     # 首先获取特定ID学员详细信息
     infodict = getdeviceinfo(devicename)

@@ -10,6 +10,7 @@ from qytdb.models import Netflow
 import pg8000
 from django.http import JsonResponse
 from qytdb.models import Netflowinterval
+from django.contrib.auth.decorators import login_required
 
 psql_ip = "192.168.1.11"
 psql_username = "qytangdbuser"
@@ -40,10 +41,12 @@ def getinterval_netflow():
     return interval
 
 
+@login_required()
 def netflow_show(request):
     return render(request, 'netflow.html')
 
 
+@login_required()
 def netflow_protocol(request):
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
@@ -92,6 +95,7 @@ def netflow_protocol(request):
     return JsonResponse({'colors': colors, 'labels': labels, 'datas': datas})
 
 
+@login_required()
 def netflow_top_ip(request):
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()

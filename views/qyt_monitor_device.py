@@ -12,6 +12,7 @@ from django.shortcuts import render
 from datetime import datetime, timedelta, timezone
 import json
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 
 def getinterval_cpu():
@@ -164,6 +165,7 @@ def get_device_if_utilization_info(devicename="default"):
         return None
 
 
+@login_required()
 def monitor_cpu(request):
     result = Devicedb.objects.all()
     devices_list = []
@@ -189,6 +191,7 @@ def monitor_cpu(request):
         return render(request, 'monitor_devices_cpu.html')
 
 
+@login_required()
 def monitor_cpu_dev(request, devicename):
     result = Devicedb.objects.all()
     devices_list = []
@@ -207,6 +210,7 @@ def monitor_cpu_dev(request, devicename):
     return render(request, 'monitor_devices_cpu.html', {'devices_list': devices_list, 'current': devicename, 'cpu_data': json.dumps(cpu_data), 'cpu_time': json.dumps(cpu_time)})
 
 
+@login_required()
 def monitor_mem(request):
     result = Devicedb.objects.all()
     devices_list = []
@@ -230,6 +234,7 @@ def monitor_mem(request):
         return render(request, 'monitor_devices_mem.html')
 
 
+@login_required()
 def monitor_mem_dev(request, devicename):
     result = Devicedb.objects.all()
     devices_list = []
@@ -248,6 +253,7 @@ def monitor_mem_dev(request, devicename):
     return render(request, 'monitor_devices_mem.html', {'devices_list': devices_list, 'current': devicename, 'mem_data': json.dumps(mem_data), 'mem_time': json.dumps(mem_time)})
 
 
+@login_required()
 def monitor_if_speed(request):
     if_data = get_device_if_speed_info("default")
     # 解决Ethernet0/0名称问题
@@ -260,6 +266,7 @@ def monitor_if_speed(request):
         return render(request, 'monitor_devices_if_speed.html')
 
 
+@login_required()
 def monitor_if_speed_dev(request, devicename):
     if_data = get_device_if_speed_info(devicename)
     # 解决Ethernet0/0名称问题
@@ -269,6 +276,7 @@ def monitor_if_speed_dev(request, devicename):
     return render(request, 'monitor_devices_if_speed.html', {'devices_list': if_data[0], 'current': devicename, 'if_list': if_list_translate, 'if_name': if_data[2][0][0],  'speed_data_list': if_data[2][0][1],   'speed_time_list': if_data[2][0][2]})
 
 
+@login_required()
 def monitor_if_speed_dev_if_direc(request, devicename, ifname, direction):
     if_data = get_device_if_speed_info(devicename)
     if direction == 'rx':
@@ -281,6 +289,7 @@ def monitor_if_speed_dev_if_direc(request, devicename, ifname, direction):
                 return JsonResponse({"ifname": tx_data[0], "speed_data": tx_data[1], "speed_time": tx_data[2]})
 
 
+@login_required()
 def monitor_if_utilization(request):
     if_data = get_device_if_utilization_info("default")
     # 解决Ethernet0/0名称问题
@@ -296,6 +305,7 @@ def monitor_if_utilization(request):
         return render(request, 'monitor_devices_if_utilization.html')
 
 
+@login_required()
 def monitor_if_utilization_dev(request, devicename):
     if_data = get_device_if_utilization_info(devicename)
     # 解决Ethernet0/0名称问题
@@ -305,6 +315,7 @@ def monitor_if_utilization_dev(request, devicename):
     return render(request, 'monitor_devices_if_utilization.html', {'devices_list': if_data[0], 'current': devicename, 'if_list': if_list_translate, 'if_name': if_data[2][0][0],  'utilization_data_list': if_data[2][0][1],   'utilization_time_list': if_data[2][0][2]})
 
 
+@login_required()
 def monitor_if_utilization_dev_if_direc(request, devicename, ifname, direction):
     if_data = get_device_if_utilization_info(devicename)
     if direction == 'rx':

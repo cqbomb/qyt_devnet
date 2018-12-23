@@ -16,7 +16,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from qytdb.forms import DeviceForm
 from modules.qyt_devnet_6_get_device_config_md5 import get_config_md5_from_device
+from django.contrib.auth.decorators import login_required
 
+
+@login_required()
 def add_devices(request):
     if request.method == 'POST':
         form = DeviceForm(request.POST)

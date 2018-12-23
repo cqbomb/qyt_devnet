@@ -13,8 +13,10 @@ from qytdb.models import Devicestatus
 from qytdb.models import Device_reachable
 from qytdb.models import Deviceinterfaces_utilization
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 
+@login_required()
 def del_device(request, devicename):
 
     m = Devicedb.objects.get(name=devicename)

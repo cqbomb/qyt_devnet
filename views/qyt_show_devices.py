@@ -8,8 +8,10 @@
 
 from qytdb.models import Devicedb, Device_reachable, Devicecpumem, Deviceinterfaces
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
+@login_required()
 def show_devices(request):
     # 查询整个数据库的信息 object.all()
     result = Devicedb.objects.all()

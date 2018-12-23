@@ -12,7 +12,10 @@ from datetime import datetime, timedelta, timezone
 from django.http import HttpResponseRedirect, HttpResponse
 from difflib import *
 import re
+from django.contrib.auth.decorators import login_required
 
+
+@login_required()
 def device_config(request):
     result = Devicedb.objects.all()
     devices_list = []
@@ -43,6 +46,7 @@ def device_config(request):
         return render(request, 'device_config.html')
 
 
+@login_required()
 def device_config_dev(request, devname):
     result = Devicedb.objects.all()
     devices_list = []
@@ -75,6 +79,7 @@ def device_config_dev(request, devname):
         return render(request, 'device_config.html')
 
 
+@login_required()
 def device_show_config(request, devname, id):
     deviceconfig = Deviceconfig.objects.get(name=devname, id=id)
     # print(deviceconfig)
@@ -84,6 +89,7 @@ def device_show_config(request, devname, id):
                                                 'config': deviceconfig.config})
 
 
+@login_required()
 def device_del_config(request, devname, id):
     m = Deviceconfig.objects.filter(name=devname, id=id)
     for x in m:
@@ -92,6 +98,7 @@ def device_del_config(request, devname, id):
     return HttpResponseRedirect('/deviceconfig/' + devname)
 
 
+@login_required()
 def device_download_config(request, devname, id):
     deviceconfig = Deviceconfig.objects.get(name=devname, id=id)
     tzutc_8 = timezone(timedelta(hours=8))
@@ -102,6 +109,7 @@ def device_download_config(request, devname, id):
     return response
 
 
+@login_required()
 def device_config_compare(request, devname, id1, id2):
     deviceconfig1 = Deviceconfig.objects.get(name=devname, id=id1)
     config1_list = re.split('\r\n|\n', deviceconfig1.config)
