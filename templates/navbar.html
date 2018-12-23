@@ -37,6 +37,17 @@
           <li class="nav-item">
             <a class="nav-link" href="/netflow/">Netflow协议分析</a>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              系统设置
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/sysconfig/lifetime">数据库老化时间</a>
+              <a class="dropdown-item" href="/sysconfig/monitor_interval">监控周期</a>
+              <a class="dropdown-item" href="/sysconfig/threshold_mail">监控阈值与邮件通知</a>
+              <a class="dropdown-item" href="/sysconfig/netflow">Netflow相关设置</a>
+            </div>
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" action="/accounts/logout">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>

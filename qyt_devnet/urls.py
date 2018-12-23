@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from views import index, top, qyt_login, qyt_add_devices, qyt_show_devices, qyt_del_device, qyt_edit_device
-from views import qyt_monitor_device, qyt_home, qyt_device_config, qyt_netflow
+from views import qyt_monitor_device, qyt_home, qyt_device_config, qyt_netflow, qyt_sysconfig
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -53,4 +53,8 @@ urlpatterns = [
     path('netflow/', qyt_netflow.netflow_show),
     path('netflow/protocol', qyt_netflow.netflow_protocol),
     path('netflow/top_ip', qyt_netflow.netflow_top_ip),
+    path('sysconfig/lifetime', qyt_sysconfig.sysconfig_lifetime),
+    path('sysconfig/monitor_interval', qyt_sysconfig.sysconfig_monitor_interval),
+    path('sysconfig/threshold_mail', qyt_sysconfig.sysconfig_threshold_mail),
+    path('sysconfig/netflow', qyt_sysconfig.sysconfig_netflow),
 ]
