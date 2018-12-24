@@ -12,11 +12,6 @@ from qytdb.forms import FindifForm
 from qytdb.models import Devicedb
 import re
 import paramiko
-import pg8000
-psql_ip = "192.168.1.11"
-psql_username = "qytangdbuser"
-psql_password = "Cisc0123"
-psql_db_name = "qytangdb"
 
 
 def ssh_singlecmd(ip, username, password, cmd):
@@ -35,26 +30,15 @@ def ssh_singlecmd(ip, username, password, cmd):
 
 
 def get_device_login_info(ip):
-    # 连接数据库
-    conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
-    cursor = conn.cursor()
-    # 查询数据库qytdb_devicedb,获取ip, type, name, snmp_ro_community, ssh_username, ssh_password, enable_password等信息
-    cursor.execute("SELECT * FROM qytdb_devicedb where ip='" + ip + "'")
-    result = cursor.fetchall()[0]
-    return result[8], result[9]
+    device_login_info = Devicedb.objects.get(ip=ip)
+    return device_login_info.ssh_username, device_login_info.ssh_password
 
 
 def get_all_sw_login_info():
-    # 连接数据库
-    conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
-    cursor = conn.cursor()
-    # 查询数据库qytdb_devicedb,获取ip, type, name, snmp_ro_community, ssh_username, ssh_password, enable_password等信息
-    cursor.execute("SELECT * FROM qytdb_devicedb where type='switch'")
-    result = cursor.fetchall()
+    switch_login_info = Devicedb.objects.filter(type='switch')
     switch_list = []
-    for x in result:
-        switch_list.append((str(x[2]), x[8], x[9], x[1]))
-
+    for x in switch_login_info:
+        switch_list.append((str(x.ip), x.ssh_username, x.ssh_password, x.name))
     return switch_list
 
 
@@ -151,6 +135,7 @@ def find_ip_device_if(seed_ip, ip):
                 return switch[3], ifname
 
 
+@login_required()
 def find_if(request):
     if request.method == 'POST':
         form = FindifForm(request.POST)
@@ -165,7 +150,3 @@ def find_if(request):
     else:  # 如果不是POST,就是GET,表示为初始访问, 显示表单内容给客户
         form = FindifForm()
         return render(request, 'find_if.html', {'form': form})
-
-
-if __name__ == "__main__":
-    print(find_ip_device_if("192.168.1.103", "10.1.1.2"))
