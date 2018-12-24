@@ -22,7 +22,11 @@ def get_threshold_cpu():
     # 获取表qytdb_devicedb中的ip, type, name, snmp_ro_community信息
     cursor.execute("select cpu_threshold, alarm_interval, last_alarm_time from qytdb_thresholdcpu where id=1")
     result = cursor.fetchall()
-    delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    try:
+        delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    except Exception:
+        return None
+
     if delta_time.seconds > result[0][1]*60:
         return result[0][0]
     else:
@@ -37,7 +41,11 @@ def get_threshold_mem():
     # 获取表qytdb_devicedb中的ip, type, name, snmp_ro_community信息
     cursor.execute("select mem_threshold, alarm_interval, last_alarm_time from qytdb_thresholdmem where id=1")
     result = cursor.fetchall()
-    delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    try:
+        delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    except Exception:
+        return None
+
     if delta_time.seconds > result[0][1]*60:
         return result[0][0]
     else:
