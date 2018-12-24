@@ -360,3 +360,10 @@ class Sysconfigthreshold(forms.Form):
                                  label='收件人TO',
                                  required=False,
                                  widget=forms.TextInput(attrs={"class": "form-control"}))
+
+
+class FindifForm(forms.Form):
+    required_css_class = 'required'
+    ip = forms.GenericIPAddressField(required=True,
+                                     label='IP地址',
+                                     widget=forms.TextInput(attrs={"class": "form-control"}))
