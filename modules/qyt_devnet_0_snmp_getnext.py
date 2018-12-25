@@ -10,6 +10,7 @@
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 
 
+# 使用get next批量获取接口信息
 def snmpv2_getnext(ip, community, oid, port=161):
     cmdGen = cmdgen.CommandGenerator()
 
