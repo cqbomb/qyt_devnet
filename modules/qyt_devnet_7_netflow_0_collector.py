@@ -12,12 +12,10 @@ import sqlite3
 import pg8000
 import hashlib
 from datetime import datetime
+from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
-psql_ip = "192.168.1.11"
-psql_username = "qytangdbuser"
-psql_password = "Cisc0123"
-psql_db_name = "qytangdb"
 
+# Netflow类型与字段映射关系
 field_types = {
     0: 'UNKNOWN_FIELD_TYPE',  # fallback for unknown field types
 
@@ -157,29 +155,12 @@ field_types = {
 }
 
 
-# def createdb():
-#     """
-#     创建数据库表,推荐未来改进为MongoDB
-#     """
-#     # 判断是否存在数据库,如果存在就删除
-#     if os.path.exists('netflow.sqlite'):
-#         os.remove('netflow.sqlite')
-#
-#     # 连接SQLite数据库
-#     conn = sqlite3.connect('netflow.sqlite')
-#     cursor = conn.cursor()
-#
-#     # 执行创建表的任务
-#     cursor.execute("create table netflowdb (源地址 varchar(40), 目的地址 varchar(40), 协议 int, 源端口 int, 目的端口 int, 入接口ID int, 入向字节数 int)")
-#
-#     conn.commit()
-
-
+# 写入Netflow收集的数据到PSQL数据库
 def netflowdb(netflow_dict):
     """
     写入数据库,推荐未来改进为MongoDB
     """
-    # 连接SQLite数据库
+    # 连接PSQL数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
 
@@ -192,7 +173,6 @@ def netflowdb(netflow_dict):
                                                                                           netflow_dict['INPUT_INTERFACE_ID'],
                                                                                           netflow_dict['IN_BYTES'],
                                                                                           str(datetime.now()))
-    # print(sqlcmd)
     cursor.execute(sqlcmd)
     # 提交数据
     conn.commit()

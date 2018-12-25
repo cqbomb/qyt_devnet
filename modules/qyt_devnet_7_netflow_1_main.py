@@ -31,6 +31,7 @@ import sys
 import socketserver
 from qyt_devnet_7_netflow_0_collector import ExportPacket
 
+# 日志相关设置
 logging.getLogger().setLevel(logging.INFO)
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.DEBUG)
@@ -39,6 +40,7 @@ ch.setFormatter(formatter)
 logging.getLogger().addHandler(ch)
 
 
+# Netflow的UDP守护进程
 class SoftflowUDPHandler(socketserver.BaseRequestHandler):
     # We need to save the templates our NetFlow device
     # send over time. Templates are not resended every
@@ -65,7 +67,7 @@ class SoftflowUDPHandler(socketserver.BaseRequestHandler):
 
 
 if __name__ == "__main__":
-    # createdb()
+    # 激活Netflow守护进程,端口为UDP 9999
     server = SoftflowUDPHandler.get_server('0.0.0.0', 9999)
 
     logging.getLogger().setLevel(logging.DEBUG)
