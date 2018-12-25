@@ -10,19 +10,17 @@ import re
 import pg8000
 import hashlib
 from datetime import datetime
-
-psql_ip = "192.168.1.11"
-psql_username = "qytangdbuser"
-psql_password = "Cisc0123"
-psql_db_name = "qytangdb"
+from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
 
+# 获取特定设备的配置与MD5值, 这个函数会在添加设备的时候使用, 用于做初始化备份
 def get_config_md5_from_device(ip, ssh_username, ssh_password, type, enable_password='Cisc0123'):
-    if type == 'Router':
+    if type == 'Router':  # 如果设备为路由器
+        # 获取设备show run
         run_config_raw = ssh_singlecmd(ip, ssh_username, ssh_password, 'show run')
         list_run_config = run_config_raw.split('\n')
         location = 0
-        host_location = 0
+        host_location = 0  # 用来找到hostname出现的位
         for i in list_run_config:
             if re.match('.*hostname .*', i):
                 host_location = location  # 定位hostname所在位置
@@ -31,17 +29,20 @@ def get_config_md5_from_device(ip, ssh_username, ssh_password, type, enable_pass
         list_run_config = list_run_config[host_location:]  # 截取hostname开始往后的部分
         run_config = '\n'.join(list_run_config)  # 再次还原为字串形式的配置
 
+        # 计算获取配置的MD5值
         m = hashlib.md5()
         m.update(run_config.encode())
         md5_value = m.hexdigest()
 
+        # 返回配置与MD5值
         return run_config, md5_value
 
-    elif type == 'switch':
+    elif type == 'switch':  # 如果设备为交换机
+        # 获取设备show run
         run_config_raw = ssh_singlecmd(ip, ssh_username, ssh_password, 'show run')
         list_run_config = run_config_raw.split('\n')
         location = 0
-        host_location = 0
+        host_location = 0  # 用来找到hostname出现的位
         for i in list_run_config:
             if re.match('.*hostname .*', i):
                 host_location = location  # 定位hostname所在位置
@@ -50,30 +51,35 @@ def get_config_md5_from_device(ip, ssh_username, ssh_password, type, enable_pass
         list_run_config = list_run_config[host_location:]  # 截取hostname开始往后的部分
         run_config = '\n'.join(list_run_config)  # 再次还原为字串形式的配置
 
+        # 计算获取配置的MD5值
         m = hashlib.md5()
         m.update(run_config.encode())
         md5_value = m.hexdigest()
 
+        # 返回配置与MD5值
         return run_config, md5_value
 
-    elif type == 'ASA':
+    elif type == 'ASA':  # 如果设备为ASA
+        # 获取设备show run, 注意获取ASA配置的方法不一样
         run_config_raw = ssh_multicmd_asa(ip, ssh_username, ssh_password,
                                           ['enable', enable_password, 'terminal pager 0', 'more system:running-config'])
         list_run_config = run_config_raw.split('\n')
         location = 0
-        host_location = 0
+        host_location = 0  # 用来找到hostname出现的位置
         for i in list_run_config:
-            if re.match('^hostname .*', i):
+            if re.match('^hostname .*', i):  # 注意匹配hostname的方法不一样,因为配置中会多次出现hostname
                 host_location = location  # 定位hostname所在位置
             else:
                 location += 1
         list_run_config = list_run_config[host_location:-4]  # 截取hostname开始往后的部分
         run_config = '\n'.join(list_run_config)  # 再次还原为字串形式的配置
 
+        # 计算获取配置的MD5值
         m = hashlib.md5()
         m.update(run_config.encode())
         md5_value = m.hexdigest()
 
+        # 返回配置与MD5值
         return run_config, md5_value
 
 
