@@ -6,18 +6,20 @@
 # 教主技术进化论拓展你的技术新边疆
 # https://ke.qq.com/course/271956?tuin=24199d8a
 """
-flow record Qytang-Record
- match ipv4 source address
- match ipv4 destination address
- match ipv4 protocol
- match transport destination-port
- match transport source-port
- match interface input
- collect counter bytes
-
 flow exporter Netflow-Exporter
  destination 192.168.1.10
  transport udp 9999
+!
+!
+flow record Qytang-Record
+ match ipv4 protocol
+ match ipv4 source address
+ match ipv4 destination address
+ match transport source-port
+ match transport destination-port
+ match interface input
+ collect counter bytes
+!
 !
 flow monitor Monitor1
  exporter Netflow-Exporter
@@ -26,6 +28,21 @@ flow monitor Monitor1
 interface Ethernet0/1
  ip flow monitor Monitor1 input
 """
+
+# [root@localhost system]# vim netflow.service
+#
+# [Unit]
+# Description=Netflow_collector_UDP9999
+# After=network.target
+#
+# [Service]
+# User=root
+# ExecStart=/usr/bin/bash -c 'cd /devnet/modules; /usr/local/bin/python3 qyt_devnet_7_netflow_1_main.py'
+#
+# [Install]
+# WantedBy=multi-user.target
+
+
 import logging
 import sys
 import socketserver
