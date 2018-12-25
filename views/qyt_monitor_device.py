@@ -16,55 +16,63 @@ from django.contrib.auth.decorators import login_required
 
 
 def getinterval_cpu():
+    # 获取CPU监控周期
     result = Devicemonitorintervalcpu.objects.all()
     if len(result) == 0:
+        # 如果没有条目, 设置初始化CPU监控周期为一个小时
         d1 = Devicemonitorintervalcpu(id=1,
                                       cpu_interval=1)
         d1.save()
-        interval = 1
-    else:
+        interval = 1  # 返回CPU监控周期为一个小时
+    else:  # 如果有!获取数据库中设置的CPU监控周期
         interval = Devicemonitorintervalcpu.objects.get(id=1).cpu_interval
-
+    # 返回CPU监控周期
     return interval
 
 
 def getinterval_mem():
+    # 获取内存监控周期
     result = Devicemonitorintervalmem.objects.all()
     if len(result) == 0:
+        # 如果没有条目, 设置初始化内存监控周期为一个小时
         d1 = Devicemonitorintervalmem(id=1,
                                       mem_interval=1)
         d1.save()
-        interval = 1
-    else:
+        interval = 1  # 返回内存监控周期为一个小时
+    else:  # 如果有!获取数据库中设置的内存监控周期
         interval = Devicemonitorintervalmem.objects.get(id=1).mem_interval
-
+    # 返回内存监控周期
     return interval
 
 
 def getinterval_speed():
+    # 获取接口速率监控周期
     result = Devicemonitorintervalspeed.objects.all()
     if len(result) == 0:
+        # 如果没有条目, 设置接口速率监控周期为一个小时
         d1 = Devicemonitorintervalspeed(id=1,
                                         speed_interval=1)
         d1.save()
-        interval = 1
-    else:
+        interval = 1  # 返回接口速率监控周期为一个小时
+    else:  # 如果有!获取数据库中设置的接口速率监控周期
         interval = Devicemonitorintervalspeed.objects.get(id=1).speed_interval
-
+    # 返回接口速率监控周期
     return interval
 
 
 def getinterval_utilization():
+    # 获取接口利用率监控周期
     result = Devicemonitorintervalutilization.objects.all()
     print(result)
     if len(result) == 0:
+        # 如果没有条目, 设置接口利用率监控周期为一个小时
         d1 = Devicemonitorintervalutilization(id=1,
                                               utilization_interval=1)
         d1.save()
-        interval = 1
-    else:
+        interval = 1  # 返回接口利用率监控周期为一个小时
+    else:  # 如果有!获取数据库中设置的接口利用率监控周期
         interval = Devicemonitorintervalutilization.objects.get(id=1).utilization_interval
-
+    # 返回接口利用率监控周期
     return interval
 
 
