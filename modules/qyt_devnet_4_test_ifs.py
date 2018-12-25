@@ -10,11 +10,9 @@ import pg8000
 import json
 from datetime import datetime
 import time
-psql_ip = "192.168.1.11"
-psql_username = "qytangdbuser"
-psql_password = "Cisc0123"
-psql_db_name = "qytangdb"
+from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
+# 这个代码主要用于不断监控接口速率和利用率
 conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
 cursor = conn.cursor()
 sqlcmd = "SELECT interfaces_current_speed_rx, interfaces_current_speed_tx , interfaces_max_utilization_rx, interfaces_max_utilization_tx from qytdb_deviceinterfaces_utilization where name = 'ASA' and id = (SELECT max(id) FROM qytdb_deviceinterfaces_utilization where name = 'ASA')"
@@ -26,5 +24,5 @@ while True:
     print(json.loads(device_result[0][1]))
     print(json.loads(device_result[0][2]))
     print(json.loads(device_result[0][3]))
-    print('-'* 80)
+    print('-' * 80)
     time.sleep(5)
