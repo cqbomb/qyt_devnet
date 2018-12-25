@@ -36,7 +36,10 @@ def get_threshold_utilization():
     # 获取表qytdb_devicedb中的ip, type, name, snmp_ro_community信息
     cursor.execute("select utilization_threshold, alarm_interval, last_alarm_time from qytdb_thresholdutilization where id=1")
     result = cursor.fetchall()
-    delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    try:
+        delta_time = datetime.now().replace(tzinfo=tzutc_8) - result[0][2]
+    except Exception:
+        return None
     # print(delta_time.seconds)
     # print(result[0][1]*60)
     if delta_time.seconds > result[0][1]*60:
