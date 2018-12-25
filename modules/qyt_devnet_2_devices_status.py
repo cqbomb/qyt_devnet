@@ -57,6 +57,7 @@ def get_threshold_mem():
         return None
 
 
+# 获取smtp服务器与登录信息
 def get_mail_login():
     # 连接PSQL数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
