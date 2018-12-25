@@ -10,6 +10,14 @@ from qyt_devnet_0_snmp_get import snmpv2_get
 from qyt_devnet_0_ssh import ssh_sure_shell_login
 from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
+# /etc/crontab 调度设置
+# *  *  *  *  * root /usr/local/bin/python3 /devnet/modules/qyt_devnet_1_reachable_test.py
+# *  *  *  *  * root sleep 10; /usr/local/bin/python3 /devnet/modules/qyt_devnet_1_reachable_test.py
+# *  *  *  *  * root sleep 20; /usr/local/bin/python3 /devnet/modules/qyt_devnet_1_reachable_test.py
+# *  *  *  *  * root sleep 30; /usr/local/bin/python3 /devnet/modules/qyt_devnet_1_reachable_test.py
+# *  *  *  *  * root sleep 40; /usr/local/bin/python3 /devnet/modules/qyt_devnet_1_reachable_test.py
+# *  *  *  *  * root sleep 50; /usr/local/bin/python3 /devnet/modules/qyt_devnet_1_reachable_test.py
+
 
 def reachable_test():
     # 连接数据库

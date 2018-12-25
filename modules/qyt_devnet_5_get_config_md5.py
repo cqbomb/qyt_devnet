@@ -13,6 +13,9 @@ import hashlib
 from datetime import datetime
 from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
+# /etc/crontab 调度设置
+# *  *  *  *  * root /usr/local/bin/python3 /devnet/modules/qyt_devnet_5_get_config_md5.py
+
 
 def get_md5_config():
     # 连接数据库

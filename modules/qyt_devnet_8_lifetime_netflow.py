@@ -10,6 +10,9 @@ import pg8000
 from datetime import datetime
 from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
+# /etc/crontab 调度设置
+# 1  *  *  *  * root /usr/local/bin/python3 /devnet/modules/qyt_devnet_8_lifetime_netflow.py
+
 
 def lifetime_netflow():
     # 连接数据库

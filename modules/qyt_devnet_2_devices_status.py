@@ -13,6 +13,9 @@ from datetime import datetime, timezone, timedelta
 from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 from qyt_devnet_0_smtp import qyt_smtp_attachment
 
+# /etc/crontab 调度设置
+# *  *  *  *  * root /usr/local/bin/python3 /devnet/modules/qyt_devnet_2_devices_status.py
+
 
 # 用于获取数据库中设置的CPU告警阈值,告警周期,与上一次告警的时间.并且判断时间超出告警周期后返回结果.
 def get_threshold_cpu():

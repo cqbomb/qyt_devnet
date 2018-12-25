@@ -13,6 +13,9 @@ from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db
 from datetime import timezone, timedelta
 from qyt_devnet_0_smtp import qyt_smtp_attachment
 
+# /etc/crontab 调度设置
+# *  *  *  *  * root /usr/local/bin/python3 /devnet/modules/qyt_devnet_3_interfaces_utilization.py
+
 
 # 获取smtp服务器与登录信息
 def get_mail_login():
