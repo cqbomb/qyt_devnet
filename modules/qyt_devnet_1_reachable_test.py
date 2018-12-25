@@ -8,11 +8,7 @@
 import pg8000
 from qyt_devnet_0_snmp_get import snmpv2_get
 from qyt_devnet_0_ssh import ssh_sure_shell_login
-
-psql_ip = "192.168.1.11"
-psql_username = "qytangdbuser"
-psql_password = "Cisc0123"
-psql_db_name = "qytangdb"
+from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
 
 def reachable_test():
@@ -33,7 +29,7 @@ def reachable_test():
                 snmp_reachable = "True"
         except Exception:
             snmp_reachable = "False"
-        # 在判断SSH可达性时,需要区分对待路由器交换机与ASA,应为ASA需要使用enable密码
+        # 在判断SSH可达性时,需要区分对待路由器交换机与ASA,因为ASA需要使用enable密码
         if str(device[1]) == "switch" or str(device[1]) == "Router":
             if ssh_sure_shell_login(str(device[0]), str(device[1]), str(device[4]), str(device[5])):
                 ssh_reachable = "True"
