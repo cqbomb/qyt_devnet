@@ -11,38 +11,46 @@ from django.shortcuts import render
 from datetime import datetime, timedelta, timezone
 from django.http import HttpResponseRedirect, HttpResponse
 from difflib import *
-import re
 from django.contrib.auth.decorators import login_required
+import re
 
 
 @login_required()
-def device_config(request):
+def device_config(request):  # 设备配置默认页面
+    # 从Devicedb数据库表获取所有的设备信息
     result = Devicedb.objects.all()
     devices_list = []
+    # 产生包含所有设备名称的列表devices_list
     for x in result:
         devices_list.append(x.name)
-    # print(devices_list)
     try:
-        devicename = devices_list[0]
-        # print(devicename)
+        devicename = devices_list[0]  # 由于是设备配置的默认页面,所以我们找到设备清单中的第一个设备
+        # 在Deviceconfig中找到第一个设备的配置信息,按照时间倒序排序
         deviceconfig = Deviceconfig.objects.filter(name=devicename).order_by('-date')
 
         device_config_date_hash = []
-        tzutc_8 = timezone(timedelta(hours=8))
+        tzutc_8 = timezone(timedelta(hours=8))  # 设置时区为东八区
         for x in deviceconfig:
-            # print(x)
-            device_config_date_hash.append({'name': devicename,
-                                            'hash': x.hash,
-                                            'id': x.id,
+            # 读取第一个设备的所有配置备份信息, 制作一个字典, 然后逐个添加到device_config_date_hash列表中
+            device_config_date_hash.append({'name': devicename,  # 设备名称
+                                            'hash': x.hash,  # 配置MD5值
+                                            'id': x.id,  # 配置唯一ID
+                                            # 配置备份时间
                                             'date': x.date.astimezone(tzutc_8).strftime('%Y-%m-%d %H:%M'),
+                                            # 删除配置链接
                                             'delete_url': '/deviceconfig/delete/' + devicename + '/' + str(x.id),
+                                            # 查看配置链接
                                             'show_url': '/deviceconfig/show/' + devicename + '/' + str(x.id),
+                                            # 下载配置链接
                                             'download_url': '/deviceconfig/download/' + devicename + '/' + str(+ x.id)})
-        # print(device_config_date_hash)
-        return render(request, 'device_config.html', {'devices_list': devices_list, 'current': devicename, 'device_config_date_hash': device_config_date_hash})
+        # 返回device_config.html页面, 与相应数据
+        return render(request, 'device_config.html', {'devices_list': devices_list,  # 设备名称清单
+                                                      'current': devicename,  # 第一个设备名称
+                                                      # 当前设备配置备份清单
+                                                      'device_config_date_hash': device_config_date_hash})
 
-    except Exception as e:
-        print(e)
+    except Exception:
+        # 如果出现问题, 返回device_config.html页面
         return render(request, 'device_config.html')
 
 
