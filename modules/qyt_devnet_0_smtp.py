@@ -8,12 +8,14 @@
 
 
 import re
-import smtplib, email.utils
+import smtplib
+import email.utils
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
 
+# 发送邮件代码
 def qyt_smtp_attachment(mailserver, username, password, From, To, Subj, Main_Body, files=None):
     # 使用SSL加密SMTP发送邮件, 此函数发送的邮件有主题,有正文,还可以发送附件
     Tos = To.split(';')  # 把多个邮件接受者通过';'分开
@@ -33,7 +35,7 @@ def qyt_smtp_attachment(mailserver, username, password, From, To, Subj, Main_Bod
             part.add_header('Content-Disposition', 'attachment', filename=file)
             msg.attach(part)
 
-    server = smtplib.SMTP_SSL(mailserver,465)  # 连接邮件服务器
+    server = smtplib.SMTP_SSL(mailserver, 465)  # 连接邮件服务器
     server.login(username, password)  # 通过用户名和密码登录邮件服务器
     failed = server.sendmail(From, Tos, msg.as_string())  # 发送邮件
     server.quit()  # 退出会话

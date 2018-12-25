@@ -6,6 +6,7 @@
 # 教主技术进化论拓展你的技术新边疆
 # https://ke.qq.com/course/271956?tuin=24199d8a
 
+# 登录PSQL信息
 psql_ip = "192.168.1.11"
 psql_username = "qytangdbuser"
 psql_password = "Cisc0123"
