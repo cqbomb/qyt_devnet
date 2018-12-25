@@ -11,6 +11,7 @@ import pg8000
 import re
 
 
+# 这只是测试代码! 并未被使用!真正使用的代码位于qyt_playbook.py
 def get_device_login_info(ip):
     # 连接数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
