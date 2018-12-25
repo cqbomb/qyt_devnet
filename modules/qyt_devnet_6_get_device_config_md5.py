@@ -10,7 +10,13 @@ import re
 import pg8000
 import hashlib
 from datetime import datetime
-from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
+
+
+# 登录PSQL信息, 由于会被qyt_add_devices.py导入, 所以需要直接在这里书写登录信息
+psql_ip = "192.168.1.11"
+psql_username = "qytangdbuser"
+psql_password = "Cisc0123"
+psql_db_name = "qytangdb"
 
 
 # 获取特定设备的配置与MD5值, 这个函数会在添加设备的时候使用, 用于做初始化备份
