@@ -9,5 +9,7 @@
 from django.shortcuts import render
 
 
+# ELK集成页面
 def log_elk(request):
+    # 返回log_elk.html页面
     return render(request, 'log_elk.html')
