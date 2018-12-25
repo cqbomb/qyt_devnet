@@ -11,30 +11,32 @@ from datetime import datetime
 from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
 
-def lifetime_netflow():
+def lifetime_devicestatus():
     # 连接数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
-    # 查询数据库qytdb_devicedb,获取ip, type, name, snmp_ro_community, ssh_username, ssh_password, enable_password等信息
+    # 查询数据库qytdb_lifetimedevicestatus,获取devicestatus的有效期
     cursor.execute("SELECT * FROM qytdb_lifetimedevicestatus")
     result = cursor.fetchall()
-    if len(result) == 0:
+    if len(result) == 0:  # 如果没有设置有效期, 写入默认值24小时
         cursor.execute("insert into qytdb_lifetimedevicestatus values (1, 24)")
         conn.commit()
-        lifetime_hours = 24
+        lifetime_hours = 24  # 返回有效期为24小时
     else:
-        lifetime_hours = result[0][1]
+        lifetime_hours = result[0][1]  # 如果存在设置的有效期, 返回设置的值
 
+    # 删除超过有效期的devicestatus信息
     sqlcmd = "DELETE FROM qytdb_devicestatus where date < CURRENT_TIMESTAMP - INTERVAL '" + str(lifetime_hours) + " hours'"
     cursor.execute(sqlcmd)
     conn.commit()
 
+    # 删除超过有效期的deviceinterfaces_utilization信息
     sqlcmd = "DELETE FROM qytdb_deviceinterfaces_utilization where date < CURRENT_TIMESTAMP - INTERVAL '" + str(lifetime_hours) + " hours'"
     cursor.execute(sqlcmd)
     conn.commit()
 
 
 if __name__ == "__main__":
-    lifetime_netflow()
+    lifetime_devicestatus()
 
 
