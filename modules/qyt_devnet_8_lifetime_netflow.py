@@ -15,16 +15,17 @@ def lifetime_netflow():
     # 连接数据库
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
-    # 查询数据库qytdb_devicedb,获取ip, type, name, snmp_ro_community, ssh_username, ssh_password, enable_password等信息
+    # 查询数据库qytdb_lifetimenetflow,获取netflow信息的老化时间
     cursor.execute("SELECT * FROM qytdb_lifetimenetflow")
     result = cursor.fetchall()
-    if len(result) == 0:
+    if len(result) == 0:  # 如果没有设置老化时间, 写入默认值24小时
         cursor.execute("insert into qytdb_lifetimenetflow values (1, 24)")
         conn.commit()
-        lifetime_hours = 24
+        lifetime_hours = 24  # 返回老化时间为24小时
     else:
-        lifetime_hours = result[0][1]
+        lifetime_hours = result[0][1]  # 如果存在设置的老化时间, 返回设置的值
 
+    # 删除超过老化时间的netflow信息
     sqlcmd = "DELETE FROM qytdb_netflow where date < CURRENT_TIMESTAMP - INTERVAL '" + str(lifetime_hours) + " hours'"
     cursor.execute(sqlcmd)
     conn.commit()
