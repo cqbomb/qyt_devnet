@@ -12,6 +12,7 @@ import time
 import re
 
 
+# 相对于网络编程第一部分的代码,调整仅仅显示最后一个命令的输出结果
 def ssh_multicmd(ip, username, password, cmd_list, verbose=True):
     ssh = paramiko.SSHClient()  # 创建SSH Client
     ssh.load_system_host_keys()  # 加载系统SSH密钥
@@ -37,6 +38,7 @@ def ssh_multicmd(ip, username, password, cmd_list, verbose=True):
     ssh.close()  # 退出ssh会话
 
 
+# 下面的代码调整了更长的等待时间"time.sleep(5)",用于后面的配置提取操作,并不用于确认可达性
 def ssh_multicmd_asa(ip, username, password, cmd_list, verbose=True):
     ssh = paramiko.SSHClient()  # 创建SSH Client
     ssh.load_system_host_keys()  # 加载系统SSH密钥
