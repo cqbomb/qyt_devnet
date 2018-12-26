@@ -2,6 +2,7 @@
 {% block title %}
     系统设置 监控周期
 {% endblock title %}
+
 {% block head %}
 {# 为了在Form中添加必选项的星,需要添加的css #}
 <style type="text/css">
@@ -16,6 +17,7 @@ label.required::before {
 <div class="container-fluid">
       <div class="container">
         <br><h2 style="color: #666666">系统设置 监控周期</h2><br>
+        {# 展示监控周期的表单 #}
         <form action="" method="post">
             {# 添加CSRF防护的隐含参数Token,主要必须使用render来渲染页面 #}
             {% csrf_token %}
@@ -38,13 +40,18 @@ label.required::before {
             <input class="btn btn-primary btn-lg" type='submit' value='提交'>
         </form>
     <br>
+    {# 重置监控周期的表单 #}
     <form action="/sysconfig/reset_monitor_interval" method="post">
+            {# 添加CSRF防护的隐含参数Token,主要必须使用render来渲染页面 #}
             {% csrf_token %}
+            {# 背景颜色为黄色, 执行重置前需要客户确认 #}
             <input class="btn btn-warning btn-lg" type='submit' value='重置到系统默认' onclick="return confirmAct();">
     </form>
     </div>
 </div>
-    <script type="text/javascript" language="javascript">
+
+{# 客户确认重置监控周期的JavaScript #}
+<script type="text/javascript" language="javascript">
     <!--
     function confirmAct()
     {
@@ -55,7 +62,7 @@ label.required::before {
         return false;
     }
     //-->
-    </script>
+</script>
 
 
 {% endblock body %}
