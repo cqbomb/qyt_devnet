@@ -16,8 +16,6 @@
     <script src="{% static "js/chart_functions.js" %}"></script>
     <!-- 加载ajax的JS文件-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 {% endblock js %}
 
 
@@ -25,6 +23,7 @@
 <div class="container-fluid">
   <br><h2 style="color: #666666">乾颐堂自动化运维系统</h2><br>
   <div class="card text-center">
+      {# 最上面的三个饼状图 #}
       <div class="card-body">
         <div class="row py-2">
             <div class="col-md-4 py-1">
@@ -58,6 +57,7 @@
                 <div class="card">
                     <div class="card-header">Top 3 CPU利用率</div>
                     <div class="card-body">
+                        {# 使用include 包含'top_cpu_utilization.html'代码进入index.html #}
                         {% include 'top_cpu_utilization.html'%}
                     </div>
                 </div>
@@ -66,6 +66,7 @@
                 <div class="card">
                     <div class="card-header">Top 3 内存利用率</div>
                     <div class="card-body">
+                        {# 使用include 包含'top_mem_utilization.html'代码进入index.html #}
                         {% include 'top_mem_utilization.html'%}
                     </div>
                 </div>
@@ -76,6 +77,7 @@
                 <div class="card">
                     <div class="card-header">Top 3 入向接口利用率</div>
                     <div class="card-body">
+                        {# 使用include 包含'top_rx_utilization.html'代码进入index.html #}
                         {% include 'top_rx_utilization.html'%}
                     </div>
                 </div>
@@ -84,6 +86,7 @@
                 <div class="card">
                     <div class="card-header">Top 3 出向接口利用率</div>
                     <div class="card-body">
+                        {# 使用include 包含'top_tx_utilization.html'代码进入index.html #}
                         {% include 'top_tx_utilization.html'%}
                     </div>
                 </div>
@@ -92,63 +95,11 @@
 </div>
 </div>
 
+{# 绘制 设备健康摘要, CPU利用率摘要, 内存利用率摘要 饼状图的JS #}
 <script type="text/javascript" language="javascript">
     // 通过URL获取JSON数据,并且渲染饼状图
     get_json_render_chart('/home/reachable', "chDonut1", "pie");
     get_json_render_chart('/home/cpu', "chDonut2", "pie");
     get_json_render_chart('/home/mem', "chDonut3", "pie");
 </script>
-
-<!--script>
-    $(document).ready( function () {
-        $('#myTable_cpu').DataTable();
-    } );
-</script-->
-    {# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
-<!--script>
-    $(document).ready(function() {
-        var table = $('#myTable_cpu').DataTable();
-
-        $('#myTable_cpu tbody').on( 'click', 'tr', function () {
-            if ( $(this).hasClass('selected') ) {
-                $(this).removeClass('selected');
-            }
-            else {
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-            }
-        } );
-
-        $('#button').click( function () {
-            table.row('.selected').remove().draw( false );
-        } );
-    } );
-</script-->
-
-<!--script>
-    $(document).ready( function () {
-        $('#myTable_mem').DataTable();
-    } );
-</script-->
-    {# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
-<!--script>
-    $(document).ready(function() {
-        var table = $('#myTable_mem').DataTable();
-
-        $('#myTable_mem tbody').on( 'click', 'tr', function () {
-            if ( $(this).hasClass('selected') ) {
-                $(this).removeClass('selected');
-            }
-            else {
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-            }
-        } );
-
-        $('#button').click( function () {
-            table.row('.selected').remove().draw( false );
-        } );
-    } );
-</script-->
-
 {% endblock body %}
