@@ -4,7 +4,6 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">设备名</th>
-          <!--th scope="col">IP地址</th-->
           <th scope="col">内存最大利用率</th>
           <th scope="col">内存当前利用率</th>
         </tr>
@@ -14,10 +13,12 @@
         <tr>
           <th scope="row" align="center" valign="center" >{{ forloop.counter }}</th>
           <td align="center" valign="center" style="color:black"><strong>{{ device.name }}</strong></td>
-
+          {# 最大CPU利用率 #}
+          {# 根据最大CPU利用率, 调整进度条颜色与长度 #}
           {% if device.cpu_max >= 70 %}
           <td align="center" valign="center">
               <div class="progress">
+                {# progress-bar为进度条, bg-danger为颜色, width为长度, <div>中间</div>为进度条内显示的内容 #}
                 <div class="progress-bar bg-danger" role="progressbar" style="width: {{ device.cpu_max }}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ device.cpu_max }}%</div>
               </div>
           </td>
@@ -34,10 +35,12 @@
               </div>
           </td>
           {% endif %}
-
+          {# 当前CPU利用率 #}
+          {# 根据当前CPU利用率, 调整进度条颜色与长度 #}
           {% if device.cpu_current >= 70 %}
           <td align="center" valign="center">
               <div class="progress">
+                {# progress-bar为进度条, bg-danger为颜色, width为长度, <div>中间</div>为进度条内显示的内容 #}
                 <div class="progress-bar bg-danger" role="progressbar" style="width: {{ device.cpu_current }}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ device.cpu_current }}%</div>
               </div>
           </td>

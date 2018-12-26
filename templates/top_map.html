@@ -3,27 +3,36 @@
     乾頤堂DevNET网络拓扑
 {% endblock title %}
 {% block head %}
-      <style type="text/css">
+
+{# mynetwork的CSS #}
+<style type="text/css">
     #mynetwork {
       width: 1000px;
       height: 600px;
       border: 1px solid lightgray;
     }
-  </style>
-  <link href="/static/css/vis-network.min.css" rel="stylesheet" type="text/css" />
+</style>
+{# 在线vis-network.min.css的CSS #}
+<link href="/static/css/vis-network.min.css" rel="stylesheet" type="text/css" />
 {% endblock head %}
+
+
 {% block totolbody %}
+  {# 加载页面时就执行draw JavaScript代码,并且获取JSON数据的URL为'/top_json' #}
   <body onload="draw('/top_json/')">
+    {# 加载JS #}
     <script type="text/javascript" src="/static/js/vis.js"></script>
     <script type="text/javascript" src="/static/js/draw_map.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
+    {# 加载系统导航条 #}
     {% include 'navbar.html'%}
 
     <div class="container-fluid">
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
+                {# 网络拓扑图出现的位置 #}
                 <div id="mynetwork"></div>
             </div>
         </div>
