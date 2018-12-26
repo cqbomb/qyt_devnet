@@ -21,9 +21,11 @@
 <div class="card text-center">
   <div class="card-header">
     <ul class="nav nav-tabs card-header-tabs">
+      {# 设备选择标签卡 #}
       {% for device in devices_list %}
           {% if device == current %}
           <li class="nav-item">
+            {# 会把当前设备current设置为active的选择卡 #}
             <a class="nav-link active" href="/monitordevice/if_speed/{{ device }}/">{{ device }}</a>
           </li>
           {% else %}
@@ -35,10 +37,12 @@
     </ul>
   </div>
   <div class="card-body">
-      <h5 class="card-title", style="color: #9d9d9d"><strong>监控接口速率</strong></h5>
+    <h5 class="card-title", style="color: #9d9d9d"><strong>监控接口速率</strong></h5>
+    {# 接口选择下拉菜单 #}
     <select id="ifname">
      {% for ifname in if_list %}
          {% if forloop.counter == 1 %}
+            {# 会把第一个设备设置为"selected" #}
             <option value={{ ifname }} selected="selected">{{ ifname }}</option>
          {% else %}
             <option value={{ ifname }}>{{ ifname }}</option>
@@ -46,15 +50,17 @@
      {% endfor %}
     </select>
     <select id="direction">
+     {# 选择监控的方向 #}
      <option value="rx" selected="selected">入方向</option>
      <option value="tx">出方向</option>
     </select>
-    <!-- 点击按钮,调用json_chart1函数(位于chart_json_functions.js),从URL获取数据,并绘制图表-->
+    {# 查询按钮, 点击触发if_speed_chart() JavaScript 绘制接口速率线性图 #}
     <button onClick="if_speed_chart();">查询</button>
       <div class='row'>
           <div class='col col-md-2'>
           </div>
           <div class='col col-md-8'>
+            {# 接口速率线性图出现位置 #}
             <canvas id='chart'></canvas>
           </div>
           <div class='col col-md-2'>
@@ -65,14 +71,19 @@
   </div>
 </div>
 </div>
+
+{# 绘制接口速率线性图JavaScript #}
 <script type="text/javascript" language="javascript">
     function if_speed_chart() {
+        // 获取客户选择的接口名称
         let e = document.getElementById("ifname");
         let ifname = e.options[e.selectedIndex].value;
-
+        // 获取客户选择的方向
         let i = document.getElementById("direction");
         let direction = i.options[i.selectedIndex].value;
+        // 获取图表JSON数据的URL
         let url = "/monitordevice/if_speed/{{ current }}/" + ifname + "/" + direction
+        // 获取JSON数据并绘制线性图
         $.getJSON(url, function (data) {//请求URL的JSON,得到数据data,下面是对data的处理
             chart_line('chart', data.ifname+" "+direction+" 速率(单位Kbps)", data.speed_time, data.speed_data, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'])
         });
