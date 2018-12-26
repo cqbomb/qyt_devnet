@@ -40,7 +40,7 @@
           {% if device.mem_current >= 70 %}
           <td align="center" valign="center">
               <div class="progress">
-                {# progress-bar为进度条, bg-danger为颜色, width为长度, <div>中间</div>为进度条内显示的内容 #}   
+                {# progress-bar为进度条, bg-danger为颜色, width为长度, <div>中间</div>为进度条内显示的内容 #}
                 <div class="progress-bar bg-danger" role="progressbar" style="width: {{ device.mem_current }}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ device.mem_current }}%</div>
               </div>
           </td>
