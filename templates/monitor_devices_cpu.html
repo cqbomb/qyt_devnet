@@ -21,9 +21,11 @@
 <div class="card text-center">
   <div class="card-header">
     <ul class="nav nav-tabs card-header-tabs">
+      {# 设备选择标签卡 #}
       {% for device in devices_list %}
           {% if device == current %}
           <li class="nav-item">
+            {# 会把当前设备current设置为active的选择卡 #}
             <a class="nav-link active" href="/monitordevice/cpu/{{ device }}/">{{ device }}</a>
           </li>
           {% else %}
@@ -40,6 +42,7 @@
           <div class='col col-md-2'>
           </div>
           <div class='col col-md-8'>
+            {# CPU利用率线形图出现的位置 #}
             <canvas id="chart"></canvas>
           </div>
           <div class='col col-md-2'>
@@ -50,7 +53,8 @@
 
 
 </div>
-
+{# 绘制CPU利用率线形图的JS #}
+{# 重点: 如果返回的结果为字符串, 为了防止JS转码, 需要使用"|safe"来防止转码 #}
 <script type="text/javascript" language="javascript">
     chart_line('chart', "{{ current }} CPU利用率", {{ cpu_time|safe }}, {{ cpu_data }}, ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d']);
 </script>
