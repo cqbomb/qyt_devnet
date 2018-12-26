@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
    {% load static %}
-    <link rel="shortcut icon" href="{% static "images/favicon.ico"%}"
+    <link rel="shortcut icon" href="{% static "images/favicon.ico"%}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -24,7 +24,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     {% block js %}
     {% endblock js %}
-
+    {# navbar使用include导入navbar.html文件 #}
     {% include 'navbar.html'%}
 
     {% block body %}

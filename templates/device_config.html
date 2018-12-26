@@ -3,10 +3,13 @@
     乾頤堂设备配置
 {% endblock title %}
 
+{# 严重注意DataTable的CSS和JS都要加载 #}
+{# 加载DataTable的在线CSS #}
 {% block head %}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 {% endblock head %}
 
+{# 加载DataTable的在线JS #}
 {% block js %}
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 {% endblock js %}
@@ -17,10 +20,12 @@
     <br><h2 style="color: #666666">乾颐堂设备配置备份查询</h2><br>
     <div class="card text-center">
       <div class="card-header">
+        {# 设备选择标签卡 #}
         <ul class="nav nav-tabs card-header-tabs">
           {% for device in devices_list %}
               {% if device == current %}
               <li class="nav-item">
+                {# 会把当前设备current设置为active的选择卡 #}
                 <a class="nav-link active" href="/deviceconfig/{{ device }}">{{ device }}</a>
               </li>
               {% else %}
@@ -33,25 +38,31 @@
       </div>
         <div class="card-body">
           <h5 class="card-title", style="color: #9d9d9d"><strong>配置对比(选择唯一ID:时间）</strong></h5>
+            {# 下拉菜单,选择一号配置 #}
             <select id="config1">
              {% for device in device_config_date_hash %}
                  {% if forloop.counter == 1 %}
+                    {# 总是会把第一个配置设置为"selected"配置 #}
                     <option value={{ device.id }} selected="selected">{{ device.id }} : {{ device.date }}</option>
                  {% else %}
                     <option value={{ device.id }}>{{ device.id }} : {{ device.date }}</option>
                  {% endif %}
              {% endfor %}
             </select>
+            {# 下拉菜单,选择二号配置 #}
             <select id="config2">
              {% for device in device_config_date_hash %}
                  {% if forloop.counter == 1 %}
+                    {# 总是会把第一个配置设置为"selected"配置 #}
                     <option value={{ device.id }} selected="selected">{{ device.id }} : {{ device.date }}</option>
                  {% else %}
                     <option value={{ device.id }}>{{ device.id }} : {{ device.date }}</option>
                  {% endif %}
              {% endfor %}
             </select>
+            {# 比较按钮, 会触发JS config_compare() #}
             <button onClick="config_compare();">比较</button>
+            {#  下面是显示备份配置的表格 #}
             <table class="table table-bordered" id="qyt_table">
                   <thead class="thead-dark">
                     <tr>
@@ -72,6 +83,7 @@
                       <td align="center" valign="center" style="color:black"><strong>{{ device.hash }}</strong></td>
                       <td align="center" valign="center" style="color:black"><strong>{{ device.date }}</strong></td>
                       <td align="center" valign="center">
+                        {# 显示可以对备份配置的三种操作:删除,查看和下载 #}
                         <a href="{{ device.delete_url }}" onclick="return confirmAct();" data-toggle="tooltip" data-placement="top" title="删除此备份配置" class="badge badge-danger">删除</a>
                         <a href="{{ device.show_url }}"  data-toggle="tooltip" data-placement="top" title="查看此备份配置" class="badge badge-success">查看</a>
                         <a href="{{ device.download_url }}"  data-toggle="tooltip" data-placement="top" title="下载此备份配置" class="badge badge-success">下载</a>
@@ -84,13 +96,14 @@
     </div>
 </div>
 
-
+{# DataTable对表单进行渲染 #}
 <script>
     $(document).ready( function () {
         $('#qyt_table').DataTable();
     } );
 </script>
-    {# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
+
+{# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
 <script>
     $(document).ready(function() {
         var table = $('#qyt_table').DataTable();
@@ -111,6 +124,7 @@
     } );
 </script>
 
+{# 客户确认删除的提示信息 #}
 <script type="text/javascript" language="javascript">
     <!--
     function confirmAct()
@@ -124,13 +138,16 @@
     //-->
 </script>
 
+{# 比较配置的JS #}
 <script type="text/javascript" language="javascript">
     function config_compare() {
+        // 提取选择的配置一
         let e = document.getElementById("config1");
         let config1 = e.options[e.selectedIndex].value;
-
+        // 提取选择的配置二
         let i = document.getElementById("config2");
         let config2 = i.options[i.selectedIndex].value;
+        // 把请求发送到比较配置的链接
         let url = "/deviceconfig/compare/{{ current }}/" + config1 + "/" + config2;
         window.open(url,'_self');
         }
