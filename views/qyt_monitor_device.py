@@ -109,18 +109,29 @@ def get_device_if_speed_info(devicename="default"):  # 获取设备接口速率�
             except Exception:
                 continue
         speed_rx_data_list = []
-        for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
-            name_speed_rx_list = []
-            for x in if_speed_rx_data:
-                # print(x) [['Outside', 0.51], ['Inside', 0.66], ['MGMT', 7.15]]
-                for y in x:
-                    # ping(y) ['Outside', 0.51]
-                    if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
-                        name_speed_rx_list.append(y[1])
-            # 最终得到 [名字, 接口入向速率清单, 记录时间的清单]
-            speed_rx_data_list.append([name, name_speed_rx_list, if_speed_time])
-            # speed_rx_data_list最终形态如下
-            # [['Outside',[0.44, 0.47, ...],['12:40', '12:41', ...]], ['Inside', [0.44, 0.47, ...],['12:40', '12:41', ...]], ...]
+        # 老方案
+        # for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
+        #     name_speed_rx_list = []
+        #     for x in if_speed_rx_data:
+        #         # print(x) [['Outside', 0.51], ['Inside', 0.66], ['MGMT', 7.15]]
+        #         for y in x:
+        #             # ping(y) ['Outside', 0.51]
+        #             if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
+        #                 name_speed_rx_list.append(y[1])
+        #     # 最终得到 [名字, 接口入向速率清单, 记录时间的清单]
+        # speed_rx_data_list.append([name, name_speed_rx_list, if_speed_time])
+        # speed_rx_data_list最终形态如下
+        # [['Outside',[0.44, 0.47, ...],['12:40', '12:41', ...]], ['Inside', [0.44, 0.47, ...],['12:40', '12:41', ...]], ...]
+
+        # 新方案
+        for i in range(len(if_speed_rx_data[0])):  # 得到接口个数
+            if_name = if_speed_rx_data[0][i][0]  # 提取接口名称
+            if_result = []
+            for x in if_speed_rx_data:  # x为[['Outside', 0.44], ['Inside', 0.66], ['MGMT', 7.04]]
+                if_result.append(x[i][1])  # [i][0] 为具体的数据
+            speed_rx_data_list.append([if_name, if_result, if_speed_time])
+        # speed_rx_data_list最终形态如下
+        # [['Outside',[0.44, 0.47, ...],['12:40', '12:41', ...]], ['Inside', [0.44, 0.47, ...],['12:40', '12:41', ...]], ...]
 
         """
         期待有更好的数据处理方案来处理得到name_speed_rx_list
@@ -140,14 +151,23 @@ def get_device_if_speed_info(devicename="default"):  # 获取设备接口速率�
         """
 
         speed_tx_data_list = []
-        for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
-            name_speed_tx_list = []
-            for x in if_speed_tx_data:
-                for y in x:
-                    if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
-                        name_speed_tx_list.append(y[1])
-            speed_tx_data_list.append([name, name_speed_tx_list, if_speed_time])
+        # for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
+        #     name_speed_tx_list = []
+        #     for x in if_speed_tx_data:
+        #         for y in x:
+        #             if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
+        #                 name_speed_tx_list.append(y[1])
+        #     speed_tx_data_list.append([name, name_speed_tx_list, if_speed_time])
         # 最终返回, 设备名称清单, 特定设备接口清单, 特定设备入向速率清单, 特定设备出向速率清单
+
+        # 新方案
+        for i in range(len(if_speed_tx_data[0])):  # 得到接口个数
+            if_name = if_speed_tx_data[0][i][0]  # 提取接口名称
+            if_result = []
+            for x in if_speed_tx_data:  # x为[['Outside', 0.44], ['Inside', 0.66], ['MGMT', 7.04]]
+                if_result.append(x[i][1])  # [i][0] 为具体的数据
+            speed_tx_data_list.append([if_name, if_result, if_speed_time])
+
         return devices_list, json.loads(ifs_name.interfaces), speed_rx_data_list, speed_tx_data_list
     except Exception:
         return None
@@ -187,25 +207,44 @@ def get_device_if_utilization_info(devicename="default"):
                 continue
 
         utilization_rx_data_list = []
-        for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
-            name_utilization_rx_list = []
-            for x in if_utilization_rx_data:
-                for y in x:
-                    if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
-                        name_utilization_rx_list.append(y[1])
-            # 最终得到 [名字, 接口入向利用率清单, 记录时间的清单]
-            utilization_rx_data_list.append([name, name_utilization_rx_list, if_utilization_time])
+        # 老方案
+        # for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
+        #     name_utilization_rx_list = []
+        #     for x in if_utilization_rx_data:
+        #         for y in x:
+        #             if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
+        #                 name_utilization_rx_list.append(y[1])
+        #     # 最终得到 [名字, 接口入向利用率清单, 记录时间的清单]
+        #     utilization_rx_data_list.append([name, name_utilization_rx_list, if_utilization_time])
+
+        # 新方案
+        for i in range(len(if_utilization_rx_data[0])):  # 得到接口个数
+            if_name = if_utilization_rx_data[0][i][0]  # 提取接口名称
+            if_result = []
+            for x in if_utilization_rx_data:  # x为[['Outside', 0.44], ['Inside', 0.66], ['MGMT', 7.04]]
+                if_result.append(x[i][1])  # [i][0] 为具体的数据
+            utilization_rx_data_list.append([if_name, if_result, if_utilization_time])
 
         utilization_tx_data_list = []
-        for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
-            name_utilization_tx_list = []
-            for x in if_utilization_tx_data:
-                for y in x:
-                    if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
-                        name_utilization_tx_list.append(y[1])
-            # 最终得到 [名字, 接口出向利用率清单, 记录时间的清单]
-            utilization_tx_data_list.append([name, name_utilization_tx_list, if_utilization_time])
+        # 老方案
+        # for name in json.loads(ifs_name.interfaces):  # 循环得到每一个接口名字
+        #     name_utilization_tx_list = []
+        #     for x in if_utilization_tx_data:
+        #         for y in x:
+        #             if y[0] == name:  # 找到匹配接口的数据,并把它放入清单
+        #                 name_utilization_tx_list.append(y[1])
+        #     # 最终得到 [名字, 接口出向利用率清单, 记录时间的清单]
+        #     utilization_tx_data_list.append([name, name_utilization_tx_list, if_utilization_time])
         # 最终返回, 设备名称清单, 特定设备接口清单, 特定设备入向利用率清单, 特定设备出向利用率清单
+
+        # 新方案
+        for i in range(len(if_utilization_tx_data[0])):  # 得到接口个数
+            if_name = if_utilization_tx_data[0][i][0]  # 提取接口名称
+            if_result = []
+            for x in if_utilization_tx_data:  # x为[['Outside', 0.44], ['Inside', 0.66], ['MGMT', 7.04]]
+                if_result.append(x[i][1])  # [i][0] 为具体的数据
+            utilization_tx_data_list.append([if_name, if_result, if_utilization_time])
+
         return devices_list, json.loads(ifs_name.interfaces), utilization_rx_data_list, utilization_tx_data_list
     except Exception:
         return None
