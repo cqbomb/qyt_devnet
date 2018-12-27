@@ -83,8 +83,8 @@ DATABASES = {
         'NAME': 'qytangdb',  # 数据库名称
         'USER': 'qytangdbuser',  # 拥有者，这个一般没修改
         'PASSWORD':'Cisc0123',  # 密码，自己设定的
-        'HOST': '192.168.1.11',  # 默认的就没写
-        'PORT': '',
+        'HOST': '192.168.1.11',  # 数据库IP地址
+        'PORT': '',  # 默认的就没写
     }
 }
 
