@@ -55,12 +55,12 @@ def get_threshold_utilization():
 
 
 # 通过计算当前字节数,与一分钟前字节数的增量来计算接口速率
-def interfaces_speed(now, min_before):
+def interfaces_speed(now, min_before, time_now, time_before):
     # * 8 是因为采集的是字节,计算速率的时候单位为bit
     # / 60 是因为采集周期为分钟,这个与后台调度程序crond的调度有关
     # / 1000 是因为要保持速率单位为kbps,与带宽的单位保持一致,便于后续利用率的计算
     # round(x, 2)表示控制浮点数的精度为小数点后两位
-    current_speed = round((((now - min_before) * 8 / 60) / 1000), 2)
+    current_speed = round((((now - min_before) * 8 / (time_now - time_before).seconds) / 1000), 2)
     return current_speed
 
 
@@ -128,7 +128,7 @@ def update_deviceinterfaces_utilization():
 
     for device in device_list:
         #  查询最近两分钟(where date >  CURRENT_TIMESTAMP - INTERVAL '119 seconds')特定设备的两条记录(之前判断过)
-        sqlcmd = "SELECT interfaces_rx, interfaces_tx from qytdb_devicestatus where date >  CURRENT_TIMESTAMP - INTERVAL '119 seconds' and name = '" + device + "'"
+        sqlcmd = "SELECT interfaces_rx, interfaces_tx, date from qytdb_devicestatus where date >  CURRENT_TIMESTAMP - INTERVAL '119 seconds' and name = '" + device + "'"
         cursor.execute(sqlcmd)
         bytes_result = cursor.fetchall()
         # print(bytes_result)
@@ -151,9 +151,11 @@ def update_deviceinterfaces_utilization():
         speed_list_rx = []
         # bytes_result[0][0]) 为一分钟前入向字节数
         # bytes_result[1][0]) 为当前入向字节数
+        # print(bytes_result[0][2])
+        # print(bytes_result[1][2])
         for x in zip(json.loads(bytes_result[0][0]), json.loads(bytes_result[1][0])):
             # 产生接口入向速率清单, 使用abs依然是防止Nexus计算速率为负数的可能
-            speed_list_rx.append((x[0][0], abs(interfaces_speed(x[1][1], x[0][1]))))
+            speed_list_rx.append((x[0][0], abs(interfaces_speed(x[1][1], x[0][1], bytes_result[1][2], bytes_result[0][2]))))
 
         # 计算出方向速率列表
         speed_list_tx = []
@@ -161,7 +163,7 @@ def update_deviceinterfaces_utilization():
         # bytes_result[1][1]) 为当前出向字节数
         for x in zip(json.loads(bytes_result[0][1]), json.loads(bytes_result[1][1])):
             # 产生接口出向速率清单, 使用abs依然是防止Nexus计算速率为负数的可能
-            speed_list_tx.append((x[0][0], abs(interfaces_speed(x[1][1], x[0][1]))))
+            speed_list_tx.append((x[0][0], abs(interfaces_speed(x[1][1], x[0][1], bytes_result[1][2], bytes_result[0][2]))))
 
         # 获取特定设备的物理接口带宽,用于后续计算利用率
         sqlcmd = "SELECT interfaces_bw from qytdb_deviceinterfaces where name = '" + device + "'"
