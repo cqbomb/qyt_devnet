@@ -366,8 +366,7 @@ def monitor_if_speed(request):  # 监控设备接口速率的默认页面
         # 返回'monitor_devices_if_speed.html'页面, 设备清单, 当前设备(为设备清单中第一个设备), 接口列表(转换后), 接口名称(选择菜单的第一个接口名称, 所以用清单中第一个接口即可),
         return render(request, 'monitor_devices_if_speed.html', {'devices_list': if_data[0],
                                                                  'current': if_data[0][0],
-                                                                 'if_list': if_list_translate,
-                                                                 'if_name': if_data[2][0][0]})
+                                                                 'if_list': if_list_translate})
     else:
         return render(request, 'monitor_devices_if_speed.html')
 
@@ -384,8 +383,7 @@ def monitor_if_speed_dev(request, devicename):  # 监控特定设备接口速率
     # 返回'monitor_devices_if_speed.html'页面, 设备清单, 当前设备名称, 接口列表(转换后), 接口名称(选择菜单的第一个接口名称, 所以用清单中第一个接口即可),
     return render(request, 'monitor_devices_if_speed.html', {'devices_list': if_data[0],
                                                              'current': devicename,
-                                                             'if_list': if_list_translate,
-                                                             'if_name': if_data[2][0][0]})
+                                                             'if_list': if_list_translate})
 
 
 @login_required()
@@ -414,8 +412,7 @@ def monitor_if_utilization(request):  # 监控设备接口利用率的默认页�
         # 返回'monitor_devices_if_utilization.html'页面, 设备清单, 当前设备(为设备清单中第一个设备), 接口列表(转换后), 接口名称(选择菜单的第一个接口名称, 所以用清单中第一个接口即可),
         return render(request, 'monitor_devices_if_utilization.html', {'devices_list': if_data[0],
                                                                        'current': if_data[0][0],
-                                                                       'if_list': if_list_translate,
-                                                                       'if_name': if_data[2][0][0]})
+                                                                       'if_list': if_list_translate})
     else:
         return render(request, 'monitor_devices_if_utilization.html')
 
@@ -430,8 +427,7 @@ def monitor_if_utilization_dev(request, devicename):  # 监控特定设备接口
     # 返回'monitor_devices_if_utilization.html'页面, 设备清单, 当前设备名称, 接口列表(转换后), 接口名称(选择菜单的第一个接口名称, 所以用清单中第一个接口即可),
     return render(request, 'monitor_devices_if_utilization.html', {'devices_list': if_data[0],
                                                                    'current': devicename,
-                                                                   'if_list': if_list_translate,
-                                                                   'if_name': if_data[2][0][0]})
+                                                                   'if_list': if_list_translate})
 
 
 @login_required()
