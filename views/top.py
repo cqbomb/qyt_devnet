@@ -32,7 +32,7 @@ edges = []
 
 edges.append({'from': 1, 'to': 2, 'length': EDGE_LENGTH_MAIN, 'label': "IOS:E0/0 --- ASA G1"})  # 可以做注释
 edges.append({'from': 1, 'to': 7, 'length': EDGE_LENGTH_MAIN, 'color': {'color': 'red'}})  # 可以做颜色
-edges.append({'from': 2, 'to': 3, 'length': EDGE_LENGTH_MAIN})
+edges.append({'from': 2, 'to': 3, 'length': EDGE_LENGTH_MAIN, 'color': {'color': 'green'}, 'value': 8, 'title': 'CoreSW到ASA'})  # 调整粗细, 与线路描述
 edges.append({'from': 3, 'to': 4, 'length': EDGE_LENGTH_MAIN})
 edges.append({'from': 3, 'to': 5, 'length': EDGE_LENGTH_MAIN})
 edges.append({'from': 4, 'to': 6, 'length': EDGE_LENGTH_MAIN})
