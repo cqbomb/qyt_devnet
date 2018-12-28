@@ -162,7 +162,12 @@ class EditDeviceForm(forms.Form):
     description = forms.CharField(label="设备描述",
                                   required=False,
                                   widget=forms.Textarea(attrs={"class": "form-control", "rows": 3}))
-    type_choices = (("switch", "switch"), ("Router", "Router"), ("ASA", "ASA"))
+    # type_choices = (("switch", "switch"), ("Router", "Router"), ("ASA", "ASA"))
+    type_choices = []
+    devicetype = DevicetypeSNMP.objects.all()
+    for x in devicetype:
+        type_choices.append([x.type, x.type_name])
+
     type = forms.CharField(label='设备类型',
                            required=True,
                            widget=forms.Select(choices=type_choices,
