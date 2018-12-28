@@ -38,7 +38,7 @@ def get_device_login_info(ip):
 
 # 查询数据库, 返回所有交换机的IP地址,SSH登录用户名和SSH密码
 def get_all_sw_login_info():
-    switch_login_info = Devicedb.objects.filter(type='switch')
+    switch_login_info = Devicedb.objects.filter(type='Nexus Switch')
     switch_list = []
     for x in switch_login_info:
         switch_list.append((str(x.ip), x.ssh_username, x.ssh_password, x.name))
