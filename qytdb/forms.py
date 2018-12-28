@@ -7,7 +7,7 @@
 # https://ke.qq.com/course/271956?tuin=24199d8a
 
 from django import forms
-from qytdb.models import Devicedb
+from qytdb.models import Devicedb, DevicetypeSNMP
 from django.core.validators import RegexValidator
 
 
@@ -44,7 +44,11 @@ class DeviceForm(forms.Form):
                                   # 输入为Textarea,支持多行输入,"rows": 3 控制展示的行数
                                   widget=forms.Textarea(attrs={"class": "form-control", "rows": 3}))
     # 选择的设备类型
-    type_choices = (("switch", "switch"), ("Router", "Router"), ("ASA", "ASA"))
+    # type_choices = [["switch", "switch22"], ["Router", "Router22"], ["ASA", "ASA22"]]
+    type_choices = []
+    devicetype = DevicetypeSNMP.objects.all()
+    for x in devicetype:
+        type_choices.append([x.type, x.type_name])
     type = forms.CharField(label='设备类型',
                            required=True,
                            widget=forms.Select(choices=type_choices,

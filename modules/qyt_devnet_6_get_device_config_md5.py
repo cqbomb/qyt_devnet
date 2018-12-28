@@ -21,7 +21,7 @@ psql_db_name = "qytangdb"
 
 # 获取特定设备的配置与MD5值, 这个函数会在添加设备的时候使用, 用于做初始化备份
 def get_config_md5_from_device(ip, ssh_username, ssh_password, type, enable_password='Cisc0123'):
-    if type == 'Router':  # 如果设备为路由器
+    if type == 'IOS Router':  # 如果设备为路由器
         # 获取设备show run
         run_config_raw = ssh_singlecmd(ip, ssh_username, ssh_password, 'show run')
         list_run_config = run_config_raw.split('\n')
@@ -43,7 +43,7 @@ def get_config_md5_from_device(ip, ssh_username, ssh_password, type, enable_pass
         # 返回配置与MD5值
         return run_config, md5_value
 
-    elif type == 'switch':  # 如果设备为交换机
+    elif type == 'Nexus Switch':  # 如果设备为交换机
         # 获取设备show run
         run_config_raw = ssh_singlecmd(ip, ssh_username, ssh_password, 'show run')
         list_run_config = run_config_raw.split('\n')
@@ -65,7 +65,7 @@ def get_config_md5_from_device(ip, ssh_username, ssh_password, type, enable_pass
         # 返回配置与MD5值
         return run_config, md5_value
 
-    elif type == 'ASA':  # 如果设备为ASA
+    elif type == 'ASA Firewall':  # 如果设备为ASA
         # 获取设备show run, 注意获取ASA配置的方法不一样
         run_config_raw = ssh_multicmd_asa(ip, ssh_username, ssh_password,
                                           ['enable', enable_password, 'terminal pager 0', 'more system:running-config'])

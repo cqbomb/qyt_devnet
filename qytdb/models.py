@@ -64,6 +64,28 @@ class Deviceinterfaces_utilization(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
+# 设备类型,名称,SNMPOID
+class DevicetypeSNMP(models.Model):
+    # 设备类型
+    type = models.CharField(max_length=999, blank=False)
+    # 设备类型名称
+    type_name = models.CharField(max_length=999, blank=False)
+    # SNMP OID CPU
+    cpu_oid = models.CharField(max_length=999, blank=False)
+    # SNMP OID MEM Free
+    mem_free_oid = models.CharField(max_length=999, blank=False)
+    # SNMP OID MEM Used
+    mem_used_oid = models.CharField(max_length=999, blank=False)
+    # SNMP OID interfaces name list
+    interfaces_name_oid = models.CharField(max_length=999, blank=False)
+    # SNMP OID interfaces bw list
+    interfaces_bw_oid = models.CharField(max_length=999, blank=False)
+    # SNMP OID interfaces in bytes list
+    interfaces_in_bytes_oid = models.CharField(max_length=999, blank=False)
+    # SNMP OID interfaces out bytes list
+    interfaces_out_bytes_oid = models.CharField(max_length=999, blank=False)
+
+
 # 设备CPU和内存利用率表,记录当前内存和CPU利用率,和历史曾经内存和CPU的最大利用率,不随着时间的增加而增加!
 class Devicecpumem(models.Model):
     # 设备名称

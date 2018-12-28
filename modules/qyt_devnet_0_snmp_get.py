@@ -8,7 +8,8 @@
 
 
 from pysnmp.hlapi import *
-
+import pg8000
+from qyt_devnet_0_DB_login import psql_ip, psql_username, psql_password, psql_db_name
 
 def snmpv2_get(ip, community, oid, port=161):
     # varBinds是列表，列表中的每个元素的类型是ObjectType（该类型的对象表示MIB variable）
@@ -38,33 +39,18 @@ def snmpv2_get(ip, community, oid, port=161):
 
 
 def get_mem_cpu(ip, type, community):
-    if type == "switch":
-        # Nexus MEM 使用
-        used = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.12.1", port=161)[1])
-        # Nexus MEM 闲置
-        free = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.13.1", port=161)[1])
-        # Nexus CPU 1 min
-        cpu = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.7.1", port=161)[1])
-        # 返回内存利用率与CPU利用率
-        return int(float(used/(free + used)) * 100), cpu
-    elif type == "Router":
-        # IOS MEM 使用
-        used = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.5.1", port=161)[1])
-        # IOS MEM 闲置
-        free = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.6.1", port=161)[1])
-        # IOS CPU 1 min
-        cpu = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.4.1", port=161)[1])
-        # 返回内存利用率与CPU利用率
-        return int(float(used / (free + used)) * 100), cpu
-    elif type == "ASA":
-        # ASA MEM 使用
-        used = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.5.1", port=161)[1])
-        # ASA MEM 闲置
-        free = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.48.1.1.1.6.1", port=161)[1])
-        # ASA CPU 1 min
-        cpu = int(snmpv2_get(ip, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.4.1", port=161)[1])
-        # 返回内存利用率与CPU利用率
-        return int(float(used / (free + used)) * 100), cpu
+    # 连接PSQL数据库
+    conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
+    cursor = conn.cursor()
+    cursor.execute("select mem_used_oid, mem_free_oid, cpu_oid from qytdb_devicetypesnmp where type='" + type + "'")
+    result = cursor.fetchall()
+    used = int(snmpv2_get(ip, community, result[0][0], port=161)[1])
+    # Nexus MEM 闲置
+    free = int(snmpv2_get(ip, community, result[0][1], port=161)[1])
+    # Nexus CPU 1 min
+    cpu = int(snmpv2_get(ip, community, result[0][2], port=161)[1])
+    # 返回内存利用率与CPU利用率
+    return int(float(used/(free + used)) * 100), cpu
 
 
 if __name__ == "__main__":
@@ -81,9 +67,9 @@ if __name__ == "__main__":
     # print(snmpv2_get(device_ip, community, "1.3.6.1.2.1.1.5.0", port=161))
     # # 地点
     # print(snmpv2_get(device_ip, community, "1.3.6.1.2.1.1.6.0", port=161))
-    print(get_mem_cpu(device_ip, "Router", community))
-    print(get_mem_cpu(nexus_ip, "switch", community))
-    print(get_mem_cpu(asa_ip, "ASA", community))
+    print(get_mem_cpu(device_ip, "IOS Router", community))
+    print(get_mem_cpu(nexus_ip, "Nexus Switch", community))
+    print(get_mem_cpu(asa_ip, "ASA Firewall", community))
 
 
 

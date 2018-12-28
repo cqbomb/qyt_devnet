@@ -25,7 +25,7 @@ def get_md5_config():
     cursor.execute("select ip, type, name, snmp_ro_community, ssh_username, ssh_password, enable_password from qytdb_devicedb")
     result = cursor.fetchall()
     for device in result:
-        if device[1] == 'Router':  # 如果设备是路由器
+        if device[1] == 'IOS Router':  # 如果设备是路由器
             # 获取设备show run
             run_config_raw = ssh_singlecmd(str(device[0]), device[4], device[5], 'show run')
             list_run_config = run_config_raw.split('\n')
@@ -55,7 +55,7 @@ def get_md5_config():
                 cursor.execute(sqlcmd)
                 conn.commit()
 
-        elif device[1] == 'switch':  # 如果设备是交换机
+        elif device[1] == 'Nexus Switch':  # 如果设备是交换机
             # 获取设备show run
             run_config_raw = ssh_singlecmd(str(device[0]), device[4], device[5], 'show run')
             list_run_config = run_config_raw.split('\n')
@@ -86,7 +86,7 @@ def get_md5_config():
                 cursor.execute(sqlcmd)
                 conn.commit()
 
-        elif device[1] == 'ASA':  # 如果设备是ASA
+        elif device[1] == 'ASA Firewall':  # 如果设备是ASA
             # 获取设备show run, 注意获取ASA配置的方法不一样
             run_config_raw = ssh_multicmd_asa(str(device[0]), device[4], device[5], ['enable', device[6], 'terminal pager 0', 'more system:running-config'])
             list_run_config = run_config_raw.split('\n')

@@ -81,7 +81,7 @@ def ssh_singlecmd(ip, username, password, cmd):
 
 def ssh_sure_shell_login(ip, type, username, password, enable_password="Cisc0123"):
     # 判断设备类型为交换机或者路由器
-    if type == "switch" or type == "Router":
+    if type == "Nexus Switch" or type == "IOS Router":
         try:
             # 确认能够使用"show run | in hostname"命令
             # 并且回显有hostname信息
@@ -93,7 +93,7 @@ def ssh_sure_shell_login(ip, type, username, password, enable_password="Cisc0123
         except Exception:
             return False
     # 确认设备为ASA
-    elif type == "ASA":
+    elif type == "ASA Firewall":
         try:
             # ASA由于默认并不能进入特权模式,所以需要敲enable,和enable密码
             result = ssh_multicmd(ip, username, password, ['enable', enable_password, 'show run | in hostname'])

@@ -1,6 +1,7 @@
 # 导入所有的数据库
 from django.contrib import admin
 from qytdb.models import Devicedb
+from qytdb.models import DevicetypeSNMP
 from qytdb.models import Deviceconfig
 from qytdb.models import Devicecpumem
 from qytdb.models import Deviceinterfaces
@@ -22,6 +23,7 @@ from qytdb.models import Smtplogindb
 
 # 可是使用后台管理所有数据库
 admin.site.register(Devicedb)
+admin.site.register(DevicetypeSNMP)
 admin.site.register(Deviceconfig)
 admin.site.register(Devicecpumem)
 admin.site.register(Deviceinterfaces)

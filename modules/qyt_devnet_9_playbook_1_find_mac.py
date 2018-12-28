@@ -27,7 +27,7 @@ def get_all_sw_login_info():
     conn = pg8000.connect(host=psql_ip, user=psql_username, password=psql_password, database=psql_db_name)
     cursor = conn.cursor()
     # 查询数据库qytdb_devicedb,获取ip, type, name, snmp_ro_community, ssh_username, ssh_password, enable_password等信息
-    cursor.execute("SELECT * FROM qytdb_devicedb where type='switch'")
+    cursor.execute("SELECT * FROM qytdb_devicedb where type='Nexus Switch'")
     result = cursor.fetchall()
     switch_list = []
     for x in result:

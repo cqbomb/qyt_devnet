@@ -38,10 +38,10 @@ def reachable_test():
         except Exception:
             snmp_reachable = "False"
         # 在判断SSH可达性时,需要区分对待路由器交换机与ASA,因为ASA需要使用enable密码
-        if str(device[1]) == "switch" or str(device[1]) == "Router":
+        if str(device[1]) == "Nexus Switch" or str(device[1]) == "IOS Router":
             if ssh_sure_shell_login(str(device[0]), str(device[1]), str(device[4]), str(device[5])):
                 ssh_reachable = "True"
-        elif str(device[1]) == "ASA":
+        elif str(device[1]) == "ASA Firewall":
             if ssh_sure_shell_login(str(device[0]), str(device[1]), str(device[4]), str(device[5]), str(device[6])):
                 ssh_reachable = "True"
         # 把得到的SNMP可达性信息和SSH可达性信息,更新到qytdb_device_reachable表
