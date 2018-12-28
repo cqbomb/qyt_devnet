@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from views import index, top, qyt_login, qyt_add_devices, qyt_show_devices, qyt_del_device, qyt_edit_device
 from views import qyt_monitor_device, qyt_home, qyt_device_config, qyt_netflow, qyt_sysconfig, qyt_log, qyt_playbook
+from views import qyt_show_devicetypes
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # 后台管理
@@ -27,6 +28,7 @@ urlpatterns = [
     path('accounts/logout/', qyt_login.qyt_logout),  # 注销页面
     path('adddevices/', qyt_add_devices.add_devices),  # 添加设备页面
     path('showdevices/', qyt_show_devices.show_devices),  # 查看设备状态页面
+    path('showdevicetypes/', qyt_show_devicetypes.show_devicetypes),  # 查看设备类型页面
     path('deletedevice/<str:devicename>/', qyt_del_device.del_device),  # 删除设备页面
     path('editdevice/<str:devicename>/', qyt_edit_device.edit_device),  # 编辑设备页面
     path('monitordevice/cpu/', qyt_monitor_device.monitor_cpu),  # 监控CPU利用率默认页面

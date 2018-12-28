@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    乾颐堂设备类型查询
+{% endblock title %}
+
+{# 严重注意DataTable的CSS和JS都要加载 #}
+{# 加载DataTable的在线CSS #}
+{% block head %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+{% endblock head %}
+
+{# 加载DataTable的在线JS #}
+{% block js %}
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+{% endblock js %}
+
+{% block body %}
+    <div class="container-fluid">
+        <br><h2 style="color: #666666">乾颐堂设备类型查询(仅用于展示,可以在后台编辑于添加)</h2><br>
+    {# 创建显示学员信息的Table,注意id="myTable", 后续DataTable JavaScript就对这个ID的Table进行渲染优化 #}
+    <table class="table table-bordered" id="myTable">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">类型</th>
+          <th scope="col">名称</th>
+          <th scope="col">CPU利用率</th>
+          <th scope="col">使用内存OID</th>
+          <th scope="col">闲置内存OID</th>
+          <th scope="col">接口名称OID</th>
+          <th scope="col">接口带宽OID</th>
+          <th scope="col">接口入向字节数OID</th>
+          <th scope="col">接口出向字节数OID</th>
+        </tr>
+      </thead>
+      <tbody id ="myTable">
+        {% for devicetype in devicetypes_list %}
+        <tr>
+          {# 通过forloop.counter来显示行号,请注意这个不是设备唯一ID #}
+          <th scope="row" align="center" valign="center" >{{ forloop.counter }}</th>
+          {# 设备名称 #}
+            <td align="center" valign="center">{{ devicetype.type }}</td>
+            <td align="center" valign="center">{{ devicetype.type_name }}</td>
+            <td align="center" valign="center">{{ devicetype.cpu_oid }}</td>
+            <td align="center" valign="center">{{ devicetype.mem_used_oid }}</td>
+            <td align="center" valign="center">{{ devicetype.mem_free_oid }}</td>
+            <td align="center" valign="center">{{ devicetype.interfaces_name_oid }}</td>
+            <td align="center" valign="center">{{ devicetype.interfaces_bw_oid }}</td>
+            <td align="center" valign="center">{{ devicetype.interfaces_in_bytes_oid }}</td>
+            <td align="center" valign="center">{{ devicetype.interfaces_out_bytes_oid }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+
+{# DataTable渲染显示客户信息的Table #}
+{# 需要加载如下的CSS和JS #}
+{# <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"> #}
+{# <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script> #}
+
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>
+
+{# DataTable中点击任何一个条目变深色,表示被选中功能的JavaScript #}
+<script>
+    $(document).ready(function() {
+        var table = $('#myTable').DataTable();
+
+        $('#myTable tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+
+        $('#button').click( function () {
+            table.row('.selected').remove().draw( false );
+        } );
+    } );
+</script>
+
+{# 提示删除确认警告的JavaScript #}
+<script type="text/javascript" language="javascript">
+    <!--
+    function confirmAct()
+    {
+        if(confirm('确定要执行此删除操作吗?'))
+        {
+            return true;
+        }
+        return false;
+    }
+    //-->
+</script>
+{% endblock body %}
