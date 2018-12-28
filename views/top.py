@@ -9,6 +9,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+# 参考文档
+# http://visjs.org/network_examples.html
 
 # 图片所在目录
 DIR = '/static/images/top/'
@@ -29,7 +31,7 @@ nodes.append({'id': 7, 'label': '互联网', 'image': DIR + 'internet_ico.png', 
 edges = []
 
 edges.append({'from': 1, 'to': 2, 'length': EDGE_LENGTH_MAIN, 'label': "IOS:E0/0 --- ASA G1"})  # 可以做注释
-edges.append({'from': 1, 'to': 7, 'length': EDGE_LENGTH_MAIN})
+edges.append({'from': 1, 'to': 7, 'length': EDGE_LENGTH_MAIN, 'color': {'color': 'red'}})  # 可以做颜色
 edges.append({'from': 2, 'to': 3, 'length': EDGE_LENGTH_MAIN})
 edges.append({'from': 3, 'to': 4, 'length': EDGE_LENGTH_MAIN})
 edges.append({'from': 3, 'to': 5, 'length': EDGE_LENGTH_MAIN})
